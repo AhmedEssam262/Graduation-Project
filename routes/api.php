@@ -23,17 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/adduser', [authController::class, 'adduser']);
 Route::post('/login', [authController::class, 'login']);
+
 Route::get('/feedback/{username}',[feedbackController::class,'filter_feedback']);
-Route::post('/req/login', [authController::class, 'login']);
-Route::get('/users/{id}', 'UserController@getUserData');
-
-
-
 Route::get('/profile/{username}',[userController::class,'getUserData']);
-Route::get('/doctor/{username}',[feedbackController::class,'filter_feedback']);
+
+Route::get('/doctors/{username}',[feedbackController::class,'filter_feedback']);
 Route::get('/doctors',[doctorController::class,'getDoctorData']);
 
-
-
-Route::get('/profile/{username?}',[userController::class,'getUserData']);
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
