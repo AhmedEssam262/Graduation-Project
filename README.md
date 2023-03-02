@@ -19,23 +19,44 @@ to run this project
 ### 1- php artisan serve
 ### 2- http://127.0.0.1:8000/api/adduser       which needs this data
     {
-        "email": "ahm",
-        "name": "a",
-        "password": "1111",
-        "username": "ahmed2626",
-        "usertype": "doctor",
-        "moreInf": true,
-        "staff_type": "nsidlxk",
-        "specialty" : "Engineer"
+      "data":
+            {
+            "about": "goood",
+            "achievement":"nothing",
+            "address": {"province": "giza", "city": "elsk", "street":"wahet-g"},
+            "birth": "1990-02-07",
+            "chospital": "Dar-tawfeeq",
+            "email": "ahmedmohamed@gmail.com",
+            "eyears": 6,
+            "fees": 200,
+            "gender": "male",
+            "gyear": 1963,
+            "images": ["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAA…Z6UIhG+nuzvxnerPm9m/kXOF4uyIbIQAAAABJRU5ErkJggg=="], 
+            "moreInf": true,
+            "nickname": "ahmedmohamed",
+            "password": "AhmedAhmed22",
+            "phone": "01024352774",
+            "prefix": "20",
+            "salary": 3000,
+            "specialty": "Neurology",
+            "userType": "doctor",
+            "username": "ahmed2222"
+            }
     }
+
 ### 3-http://127.0.0.1:8000/api/login
-        {
-             "password": "111",
-              "username": "ahmed2626"
-        }
-### 4-http://127.0.0.1:8000/api/chkuname/ahm26 
-where(ahm26) is the username
+    {
+        "data":
+            {
+                "password": "AhmedAhmed22",
+                 "username": "ahmed22"
+            }
+    }
+### 4-http://127.0.0.1:8000/api/doctors
+
+### 5-http://127.0.0.1:8000/api/profile/{username}
+
+### 6-http://127.0.0.1:8000/api/doctors/{username}
 
 
-### 5-http://127.0.0.1:8000/api//feedback/ahm26
-where(ahm26) is the username
+### 7-http://127.0.0.1:8000/api//feedback/{username}
