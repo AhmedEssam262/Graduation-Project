@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use App\Models\Staff;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class userController extends Controller
 {
-    public function getUserData($user_id)
+    public function getUserData($username)
     {
-        $user = User::where('id', $user_id)->first();
+        $user = User::where('username', $username)->first();
+        $doctor = Doctor::where('username', $username)->first();
 
         $userData = [
             'state' => 'good, ok',
@@ -34,6 +37,20 @@ class userController extends Controller
                             'img_url' => $user->img_url
                         ]
                     ]
+                ],
+                'doctor' => [
+                    'doctor_id' => $user->id,
+                    'current_hospital' => $doctor->current_hospital,
+                    'graduation_year' => $doctor->graduation_year,
+                    'experience_years' => $doctor->experience_years,
+                    'about' => $doctor->about,
+                    'specialty' => $doctor->specialty,
+                    'experiences' => $doctor->experiences,
+                    'salary' => $doctor->salary,
+                    'fees' => $doctor->salary,
+                    'certificate_count' => $doctor->certificate_count,
+                    'rate' => $doctor->rate,
+                    'num_rate' => $doctor->num_rate,
                 ]
             ]
         ];

@@ -2,35 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 
 class doctorController extends Controller
 {
-    public function getDoctorData($user_id)
+    public function getDoctorData()
     {
-        $doctor = Doctor::where('id', $user_id)->first();
+        $doctor = Doctor::all();
 
-        $doctorData = [
-            'state' => 'good, ok',
-            'message' => 'information retreived successfully',
-            'data' => [
-                'user' => [
-                    'doctor_id' => $doctor->id,
-                    'user_name' => $doctor->username,
-                    'rate'=>$doctor->rate,
-                    'specialty'=>$doctor->specialty,
-                    'nick_name'=>$doctor->name,
-                    'fees'=>$doctor->salary,
-                    'about'=>$doctor->about,
-                    'img_urls' => [
-                        [
-                            'img_url' => $doctor->img_url
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $data = array();
+        $state= 'good, ok';
+        $message = 'information retreived successfully';
+        foreach ($doctor as $d) {
+            $doctorData = [
+                        'doctor_id' => $d->id,
+                        'user_name' => $d->username,
+                        'rate' => $d->rate,
+                        'specialty' => $d->specialty,
+                        'nick_name' => $d->name,
+                        'fees' => $d->salary,
+                        'about' => $d->about,
+                        'img_urls' => $d->img_url
 
-        return response()->json($doctorData);
+            ];
+            array_push($data, $doctorData);
+        }
+        return response(compact('state','message','data'), 200);
     }
 }

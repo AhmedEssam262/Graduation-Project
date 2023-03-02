@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\authController;
+use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
 use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
@@ -28,8 +29,9 @@ Route::get('/users/{id}', 'UserController@getUserData');
 
 
 
-Route::get('/user/{id}',[userController::class,'getUserData']);
-Route::get('/feedback/{username}',[feedbackController::class,'filter_feedback']);
+Route::get('/profile/{username}',[userController::class,'getUserData']);
+Route::get('/doctor/{username}',[feedbackController::class,'filter_feedback']);
+Route::get('/doctors',[doctorController::class,'getDoctorData']);
 
 
 
