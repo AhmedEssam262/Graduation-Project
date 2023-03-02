@@ -32,4 +32,6 @@ Route::middleware([
 Route::get('/chkuname/{username}', [authController::class, 'check_user']);
 Route::post('/adduser', [authController::class, 'adduser']);
 Route::post('/login', [authController::class, 'login']);
+Route::get('/user/{id}',[userController::class,'getUserData']);
+Route::get('/doctor/{id}',[doctorController::class,'getDoctorData']);
 
