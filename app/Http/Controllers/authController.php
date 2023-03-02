@@ -6,38 +6,23 @@ use App\Models\Doctor;
 use App\Models\Staff;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PHPUnit\Util\Xml\Validator;
 
 class authController extends Controller
 {
-    public function check_user($username){
-        $users = User::where('username',$username)->first();
-        /*        return response(compact('users'));*/
 
-        if(!$users){
-            $isExist=1;
-            $status=400;
-            return response(compact('isExist', 'status'));
-        }
-
-        $isExist=0;
-        $status=200;
-        return response(compact('isExist', 'status'));
-    }
 
 
     public function adduser(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'username' => 'required|string',
-            'password' => 'required|string',
 
-        ]);
-        $username = $request->username;
-        $users = User::where('username',$username)->first();
+        $u = ($request->input('data'));
+        $x=$u['username'];
+
+        $users = User::where('username',$x)->first();
 
         if($users){
             $state="bad request";
@@ -53,43 +38,42 @@ class authController extends Controller
 
         $state="good, ok";
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'username' => $data['username'],
-            'password' => bcrypt($data['password']),
-            'user_type' => $request->usertype,
-            'bdate' => $request->bdate,
-            'gender' => $request->gender,
-            'prefix' =>  $request->prefix,
-            'phone' => $request->phone,
-            'province' => $request->province,
-            'city' => $request->city,
-            'street' => $request->street,
-            'moreInf'=>$request->moreInf,
-            'img_url' =>$request->img_url
+        'name' => $u['nickname'],
+        'email' => $u['email'],
+        'username' => $u['username'],
+        'password' => bcrypt($u['password']),
+            'user_type' => $u['userType'],
+            'bdate' =>$u ['birth'],
+            'gender' => $u['gender'],
+            'prefix' =>$u['prefix'],
+            'phone' =>$u['phone'],
+            'moreInf' =>$u['moreInf'],
+            'img_url' =>$u['images']
         ]);
 
-        if($request->moreInf == true) {
+        $data = User::where('username',$x)->first();
+        $user_id=$data->id;
+        if($u['userType'] == "doctor") {
 
-            $data = User::where('username',$username)->first();
+            $data = User::where('username',$x)->first();
             $user_id=$data->id;
 
             $doctors = Doctor::create([
-                'name' => $data['name'],
+                'name' => $data['nickname'],
                 'user_id'=>$user_id,
                 'username' => $data['username'],
-                'staff_type' => $request->staff_type,
-                'specialty' => $request->specialty,
-                'age' => $request->age,
-                'num_rate' => $request->num_rate,
-                'rate' => $request->rate,
-                'current_hospital' => $request->current_hospital,
-                'graduation_year' => $request->graduation_year,
-                'experience_years' => $request->experience_years,
-                'experiences' => $request->experiences,
-                'about' => $request->about,
-                'salary' => $request->salary,
-                'certificate_count' => $request->certificate_count,
+                'staff_type' => $u['userType'],
+                'specialty' => $u['specialty'],
+                'age' => Carbon::parse($u ['birth'])->age,
+/*                'num_rate' => $u['num_rate'],*/
+/*                'rate' => $u['rate'],*/
+                'current_hospital' => $u['chospital'],
+                'graduation_year' => $u['gyear'],
+                'experience_years' => $u['eyears'],
+                'experiences' =>$u['achievement'],
+                'about' => $u['about'],
+                'salary' => $u['salary'],
+/*                'certificate_count' => $request->data->certificate_count,*/
             ]);
             $token = $user->createToken('main')->plainTextToken;
             $message="information retreived successfully";
@@ -99,6 +83,9 @@ class authController extends Controller
 
             return response(compact('state', 'message','data'),200);
         }
+        $data = [
+            'user_id'=>$user_id
+        ];
         $message="information retreived successfully";
         $token = $user->createToken('main')->plainTextToken;
         return response(compact('state', 'message','data'),200);
@@ -107,13 +94,8 @@ class authController extends Controller
  * ******************************************** login ********************************************
  */
     public function login(Request $request){
-        $username=$request->username;
-
-        $credentials = $request->validate([
-            'username' => ['required'],
-            'password' => ['required'],
-        ]);
-
+        $credentials = ($request->input('data'));
+        $username=$credentials['username'];
         if (Auth::attempt($credentials)) {
             $state= "good, ok";
             $message= "information retreived successfully";
