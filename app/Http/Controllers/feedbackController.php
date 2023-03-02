@@ -10,16 +10,16 @@ use Illuminate\Http\Request;
 
 class feedbackController extends Controller
 {
-    public function filter_feedback($username){
+    public function filter_feedback($username)
+    {
 
 
-        $userdoc = User::where('username',$username)->first();
+        $userdoc = User::where('username', $username)->first();
 
-        $doctor =  Doctor::where('username',$username)->first();
+        $doctor = Doctor::where('username', $username)->first();
 
         $feedback = feedback::where('feedback_to', $doctor->id)->get();
-
-        $res=array();
+        $res = array();
         foreach ($feedback as $f) {
             $userpat = User::where('id', $f->feedback_from)->first();
             $userData = [
@@ -39,10 +39,9 @@ class feedbackController extends Controller
                     ]
                 ]
             ];
-            array_push($res,$userData);
+            array_push($res, $userData);
 
         }
-        return response(compact('res'),200);
-
+        return response(compact('res'), 200);
     }
 }
