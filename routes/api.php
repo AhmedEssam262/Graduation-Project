@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\appointmentController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
@@ -29,5 +30,9 @@ Route::get('/profile/{username}',[userController::class,'getUserData']);
 
 Route::get('/doctors/{username}',[feedbackController::class,'filter_feedback']);
 Route::get('/doctors',[doctorController::class,'getDoctorData']);
+
+//appointments
+Route::post('schedule/appointments/{userid}',[appointmentController::class,'sched_appointment']);
+Route::post('book/appointment/{userid}',[appointmentController::class,'book_appointment']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
