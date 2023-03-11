@@ -14,10 +14,9 @@
 ### * Needed Packages installed
 ```
 <hr>
-to run this project
+## Authentication APIs
 
-### 1- php artisan serve
-### 2- http://127.0.0.1:8000/api/adduser       which needs this data
+###  http://127.0.0.1:8000/api/adduser       which needs this data
     {
       "data":
             {
@@ -44,7 +43,7 @@ to run this project
             }
     }
 
-### 3-http://127.0.0.1:8000/api/login
+### http://127.0.0.1:8000/api/login
     {
         "data":
             {
@@ -52,11 +51,60 @@ to run this project
                  "username": "ahmed22"
             }
     }
-### 4-http://127.0.0.1:8000/api/doctors
 
-### 5-http://127.0.0.1:8000/api/profile/{username}
+### http://127.0.0.1:8000/api/doctors
 
-### 6-http://127.0.0.1:8000/api/doctors/{username}
+### http://127.0.0.1:8000/api/profile/{username}
+
+### http://127.0.0.1:8000/api/doctors/{username}
 
 
-### 7-http://127.0.0.1:8000/api//feedback/{username}
+### http://127.0.0.1:8000/api//feedback/{username}
+
+## Booking and Scheduling APIs
+### http://127.0.0.1:8000/api/schedule/appointments?userid=6
+
+    {
+        "data":{
+            "date":"2023-2-25",
+            "totalSlots":["8:00 AM","9:00 PM","7:00 PM","9:00 AM","11:00 AM"]
+        }
+    }
+
+### http://127.0.0.1:8000/api/book/appointment?userid=6
+
+    {
+        "data":{
+            "date":"2023-2-27",
+            "bookedSlot":"9:00 AM",
+            "doctorId":40
+        }
+    }
+### http://127.0.0.1:8000/api/get/slots
+    {
+        "data":{
+            "date":"2023-03-06",
+            "doctorId":6
+        }
+    }
+
+### http://127.0.0.1:8000/api/cancel/appointment?userid=6
+
+    {
+        "data":{
+            "cancelFrom":"patient",
+            "date":"2023-2-27",
+            "bookedSlot":"11:00 AM",
+            "doctorId":40
+        }
+    }
+
+### http://127.0.0.1:8000/api/cancel/appointment?userid=6
+
+    {
+        "data":{
+            "cancelFrom":"patient",
+            "date":"2023-2-27",
+            "bookedSlot":"11:00 AM",
+        }
+    }

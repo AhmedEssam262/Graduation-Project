@@ -32,7 +32,9 @@ Route::get('/doctors/{username}',[feedbackController::class,'filter_feedback']);
 Route::get('/doctors',[doctorController::class,'getDoctorData']);
 
 //appointments
-Route::post('schedule/appointments/{userid}',[appointmentController::class,'sched_appointment']);
-Route::post('book/appointment/{userid}',[appointmentController::class,'book_appointment']);
+Route::post('schedule/appointments',[appointmentController::class,'sched_appointment']);
+Route::post('book/appointment',[appointmentController::class,'book_appointment']);
+Route::post('cancel/appointment',[appointmentController::class,'cancel_appointment']);
+Route::post('get/slots',[appointmentController::class,'get_slots']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
