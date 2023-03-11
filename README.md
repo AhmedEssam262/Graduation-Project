@@ -81,10 +81,30 @@
         }
     }
 ### http://127.0.0.1:8000/api/get/slots
-{
-    "data":{
-        "date":"2023-03-06",
-        "doctorId":6
+    {
+        "data":{
+            "date":"2023-03-06",
+            "doctorId":6
+        }
     }
-}
+    
+### http://127.0.0.1:8000/api/cancel/appointment?userid=6
 
+    {
+        "data":{
+            "cancelFrom":"patient",
+            "date":"2023-2-27",
+            "bookedSlot":"11:00 AM",
+            "doctorId":40
+        }
+    }
+
+### http://127.0.0.1:8000/api/cancel/appointment?userid=6
+
+    {
+        "data":{
+            "cancelFrom":"patient",
+            "date":"2023-2-27",
+            "bookedSlot":"11:00 AM",
+        }
+    }
