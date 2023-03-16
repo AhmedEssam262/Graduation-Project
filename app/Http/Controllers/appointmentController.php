@@ -6,9 +6,14 @@ use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class appointmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     public function sched_appointment(Request $request)
     {
         $userid = $_GET['userid'];
@@ -26,8 +31,9 @@ class appointmentController extends Controller
                 'slot_time' => $s,
             ]);
         }
+        $a=Auth::user()->id;
         $msg = "done";
-        return response(compact('msg'), 200);
+        return response(compact('msg','a'), 200);
 
 
     }
