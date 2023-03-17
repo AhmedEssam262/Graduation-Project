@@ -51,7 +51,8 @@
                  "username": "ahmed22"
             }
     }
-
+### http://127.0.0.1:8000/api/chkuname/Auth1
+<hr><hr>
 ### http://127.0.0.1:8000/api/doctors
 
 ### http://127.0.0.1:8000/api/profile/{username}
