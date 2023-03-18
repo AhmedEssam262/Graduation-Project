@@ -15,7 +15,7 @@ class authController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','adduser']]);
+        $this->middleware('auth:api', ['except' => ['login','adduser','chkuname']]);
     }
 
 
@@ -128,5 +128,29 @@ class authController extends Controller
             'isVerified'=>0
         ];
         return response(compact('state', 'message','data'),400);
+    }
+
+    /*
+    * ******************************************** Check user ********************************************
+     */
+    public function chkuname($username)
+    {
+        $users = User::where('username',$username)->first();
+
+        if($users){
+            $state="bad request";
+            $message="inf. not found";
+            $data = [
+                'isUser'=>true
+            ];
+            return response(compact('state','message','data'),400);
+        }
+
+        $state="good, ok";
+        $message="information retreived successfully";
+        $data = [
+            'isUser'=>false
+        ];
+        return response(compact('state','message','data'),400);
     }
 }

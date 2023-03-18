@@ -22,14 +22,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('/adduser', [authController::class, 'adduser']);
-Route::post('/login', [authController::class, 'login']);
+Route::post('/adduser', [authController::class, 'adduser']);      //right
+Route::post('/login', [authController::class, 'login']);//right
+Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //right
 
 Route::get('/feedback/{username}',[feedbackController::class,'filter_feedback']);
-Route::get('/profile/{username}',[userController::class,'getUserData']);
+Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
 
 Route::get('/doctors/{username}',[feedbackController::class,'filter_feedback']);
-Route::get('/doctors',[doctorController::class,'getDoctorData']);
+Route::get('/doctors',[doctorController::class,'getDoctorData']);      //right
 
 //appointments
 Route::post('schedule/appointments',[appointmentController::class,'sched_appointment']);

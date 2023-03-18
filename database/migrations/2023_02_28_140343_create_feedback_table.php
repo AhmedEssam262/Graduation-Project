@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('feedback_from');
             $table->unsignedBigInteger('feedback_to');
             $table->foreign('feedback_from')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('feedback_to')->references('id')->on('doctors')->cascadeOnDelete();
+            $table->foreign('feedback_to')->references('user_id')->on('doctors')->cascadeOnDelete();
             $table->double('rate')->nullable();
             $table->text('feedback');
         });

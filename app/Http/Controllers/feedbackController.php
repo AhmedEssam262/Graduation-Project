@@ -12,8 +12,6 @@ class feedbackController extends Controller
 {
     public function filter_feedback($username)
     {
-
-
         $userdoc = User::where('username', $username)->first();
 
         $doctor = Doctor::where('username', $username)->first();

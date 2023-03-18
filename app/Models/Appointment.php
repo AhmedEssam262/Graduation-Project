@@ -16,6 +16,8 @@ class Appointment extends Model
         'feedback',
         'schedule_date',
         'slot_time',
+        'duration',
+        'appointment_type',
         'appointment_state'
 
 

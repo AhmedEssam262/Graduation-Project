@@ -20,9 +20,11 @@ return new class extends Migration
             $table->unsignedBigInteger('schedule_from');
             $table->unsignedBigInteger('booked_from')->nullable();
             $table->date('schedule_date');
+            $table->integer('duration')->nullable();
+            $table->string('appointment_type')->nullable();
 
             $table->foreign('booked_from')->references('id')->on('users')->cascadeOnDelete();
-            $table->foreign('schedule_from')->references('id')->on('doctors')->cascadeOnDelete();
+            $table->foreign('schedule_from')->references('user_id')->on('doctors')->cascadeOnDelete();
             $table->double('rate')->nullable();
             $table->string('slot_time')->nullable();
             $table->string('feedback')->nullable();

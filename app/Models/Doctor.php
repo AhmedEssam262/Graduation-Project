@@ -13,7 +13,6 @@ class Doctor extends Model
         'name',
         'username',
         'user_id',
-
         'staff_type',
         'specialty',
         'current_hospital',

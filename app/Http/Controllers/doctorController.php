@@ -16,7 +16,7 @@ class doctorController extends Controller
         $message = 'information retreived successfully';
         foreach ($doctor as $d) {
             $doctorData = [
-                        'doctor_id' => $d->id,
+                        'doctor_id' => $d->user_id,
                         'user_name' => $d->username,
                         'rate' => $d->rate,
                         'specialty' => $d->specialty,

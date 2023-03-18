@@ -14,7 +14,8 @@
 ### * Needed Packages installed
 ```
 <hr>
-## Authentication APIs
+
+## <div style="color: firebrick">Authentication APIs</div>
 
 ###  http://127.0.0.1:8000/api/adduser       which needs this data
     {
@@ -51,6 +52,9 @@
                  "username": "ahmed22"
             }
     }
+### http://127.0.0.1:8000/api/chkuname/Auth1
+<br>
+<hr>
 
 ### http://127.0.0.1:8000/api/doctors
 
@@ -61,17 +65,34 @@
 
 ### http://127.0.0.1:8000/api//feedback/{username}
 
-## Booking and Scheduling APIs
-### http://127.0.0.1:8000/api/schedule/appointments?userid=6
+## <div style="color: firebrick">Booking and Scheduling APIs</div>
+### http://127.0.0.1:8000/api/schedule/appointments
 
     {
         "data":{
-            "date":"2023-2-25",
-            "totalSlots":["8:00 AM","9:00 PM","7:00 PM","9:00 AM","11:00 AM"]
+            "date":"2023-3-17"
+            ,
+           "addedAppointments":[
+                {
+                "slotTime":"10:50 am",
+                "appointmentType":"chat",
+                "appointmentDuration":20000
+                },
+                {
+                "slotTime":"11:50 am",
+                "appointmentType":"chat",
+                "appointmentDuration":20000
+                },
+                {
+                "slotTime":"12:50 am",
+                "appointmentType":"chat",
+                "appointmentDuration":20000
+                }
+            ]
         }
     }
 
-### http://127.0.0.1:8000/api/book/appointment?userid=6
+### http://127.0.0.1:8000/api/book/appointment
 
     {
         "data":{
