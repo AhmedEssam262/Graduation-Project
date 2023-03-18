@@ -94,15 +94,15 @@
     
     
     
-{
-    "data":{
-        "date":"2023-3-17"
-        ,
-        "deletedAppointments":[
-            "11:50 am"
-        ]
+    {
+        "data":{
+            "date":"2023-3-17"
+            ,
+            "deletedAppointments":[
+                "11:50 am"
+            ]
+        }
     }
-}
 
 ### http://127.0.0.1:8000/api/book/appointment
 
