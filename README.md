@@ -145,3 +145,7 @@
 
 ### http://127.0.0.1:8000/api/get/appointments?date=2023-3-17
 ### http://127.0.0.1:8000/api/get/appointments?date=2023-3-17&doctor=true
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7dfb7438a3eec20bf6dc07b3012cc3d754b74ad7
