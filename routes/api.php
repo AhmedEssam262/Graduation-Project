@@ -36,6 +36,7 @@ Route::get('/doctors',[doctorController::class,'getDoctorData']);      //right
 Route::post('schedule/appointments',[appointmentController::class,'sched_appointment']);
 Route::post('book/appointment',[appointmentController::class,'book_appointment']);
 Route::post('cancel/appointment',[appointmentController::class,'cancel_appointment']);
+Route::get('get/appointments',[appointmentController::class,'get_appointments']);
 Route::post('get/slots',[appointmentController::class,'get_slots']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/

@@ -72,7 +72,7 @@
         "data":{
             "date":"2023-3-17"
             ,
-           "addedAppointments":[
+            "addedAppointments":[
                 {
                 "slotTime":"10:50 am",
                 "appointmentType":"chat",
@@ -88,6 +88,18 @@
                 "appointmentType":"chat",
                 "appointmentDuration":20000
                 }
+            ]
+        }
+    }
+    
+    
+    
+    {
+        "data":{
+            "date":"2023-3-17"
+            ,
+            "deletedAppointments":[
+                "11:50 am"
             ]
         }
     }
@@ -129,3 +141,7 @@
             "bookedSlot":"11:00 AM",
         }
     }
+
+
+### http://127.0.0.1:8000/api/get/appointments?date=2023-3-17
+### http://127.0.0.1:8000/api/get/appointments?date=2023-3-17&doctor=true
