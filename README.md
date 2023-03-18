@@ -65,7 +65,7 @@
 
 ### http://127.0.0.1:8000/api//feedback/{username}
 
-<div style="color: firebrick">Booking and Scheduling APIs</div>
+## <div style="color: firebrick">Booking and Scheduling APIs</div>
 ### http://127.0.0.1:8000/api/schedule/appointments
 
     {
