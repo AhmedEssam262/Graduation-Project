@@ -151,6 +151,6 @@ class authController extends Controller
         $data = [
             'isUser'=>false
         ];
-        return response(compact('state','message','data'),400);
+        return response(compact('state','message','data'),200);
     }
 }
