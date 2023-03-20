@@ -26,10 +26,9 @@ Route::post('/adduser', [authController::class, 'adduser']);      //right
 Route::post('/login', [authController::class, 'login']);//right
 Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //right
 
-Route::get('/feedback/{username}',[feedbackController::class,'filter_feedback']);
+Route::get('/feedback/',[feedbackController::class,'filter_feedback']);      //right
 Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
 
-Route::get('/doctors/{username}',[feedbackController::class,'filter_feedback']);
 Route::get('/doctors',[doctorController::class,'getDoctorData']);      //right
 
 //appointments
