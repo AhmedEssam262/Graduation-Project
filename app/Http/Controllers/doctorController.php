@@ -9,7 +9,27 @@ class doctorController extends Controller
 {
     public function getDoctorData()
     {
+        $spec=Null;
+        $doc_name=null;
+        if(isset($_GET['specialty'])) {
+            $spec  =$_GET['specialty'];
+        }
+
+        if(isset($_GET['dname'])) {
+            $doc_name  =$_GET['dname'];
+        }
+
         $doctor = Doctor::all();
+        if($spec!=null && $doc_name==null){
+            $doctor = Doctor::where('specialty','=',$spec);
+        }
+        if($spec==null && $doc_name!=null){
+            $doctor = Doctor::where('name','=',$doc_name);
+        }
+
+        if($spec!=null && $doc_name!=null){
+            $doctor = Doctor::where(['name','=',$doc_name],['specialty','=',$spec]);
+        }
 
         $data = array();
         $state= 'good, ok';
