@@ -22,9 +22,8 @@ class authController extends Controller
     public function adduser(Request $request)
     {
 
-        $u = ($request->input('data'));
+        $u= ($request->input('data'));
         $x=$u['username'];
-
         $users = User::where('username',$x)->first();
 
         if($users){
@@ -38,31 +37,85 @@ class authController extends Controller
             ];
             return response(compact('state','message','data'),400);
         }
+        $email=null;
+        if(isset($u['email'])){
+            $email=$u['email'];
+        }
+        $user_type="none";
+        if(isset($u['userType'])){
+            $user_type=$u['userType'];
+        }
+        $bdate=null;
+        if(assert($u['birth'])){
+            $bdate=$u['birth'];
+        }
+        $prefix=null;
+        if(isset($u['prefix'])){
+            $prefix=$u['prefix'];
+        }
+
+        $phone=null;
+        if(isset($u['phone'])){
+            $phone=$u['phone'];
+        }
+        $images=null;
+        if(isset($u['images'])){
+            $images=$u['images'];
+        }
+
 
         $state="good, ok";
         $user = User::create([
             'name' => $u['nickname'],
-            'email' => $u['email'],
+            'email' => $email,
             'username' => $u['username'],
             'password' => bcrypt($u['password']),
-            'user_type' => $u['userType'],
-            'bdate' =>$u ['birth'],
+            'user_type' => $user_type,
+            'bdate' =>$bdate,
             'gender' => $u['gender'],
-            'prefix' =>$u['prefix'],
-            'phone' =>$u['phone'],
-            'moreInf' =>$u['moreInf'],
-            'img_url' =>$u['images']
+            'prefix' =>$prefix,
+            'phone' =>$phone,
+            'img_url' =>$images,
         ]);
 
         $data = User::where('username',$x)->first();
         $user_id=$data->id;
+        $user_name=$data->name;
+
         if($u['userType'] == "doctor") {
-
+            $moreInf=null;
+            if(isset($u['moreInf'])){
+                $moreInf=$u['moreInf'];
+            }
             $data = User::where('username',$x)->first();
-            $user_id=$data->id;
+            $chospital=null;
+            if(isset($u['chospital'])){
+                $chospital=$u['chospital'];
+            }
+            $gyear=null;
+            if(isset($u['gyear'])){
+                $gyear=$u['gyear'];
+            }
+            $eyears=null;
+            if(isset($u['eyears'])){
+                $eyears=$u['eyears'];
+            }
 
+            $achievement=null;
+            if(isset($u['achievement'])){
+                $achievement=$u['achievement'];
+            }
+            $about=null;
+            if(isset($u['about'])){
+                $about=$u['about'];
+            }
+
+            $salary=null;
+            if(isset($u['salary'])){
+                $salary=$u['salary'];
+            }
             $doctors = Doctor::create([
-                'name' => $data['nickname'],
+                'name' => $user_name,
                 'user_id'=>$user_id,
                 'username' => $data['username'],
                 'staff_type' => $u['userType'],
@@ -70,12 +123,12 @@ class authController extends Controller
                 'age' => Carbon::parse($u ['birth'])->age,
                 /*                'num_rate' => $u['num_rate'],*/
                 /*                'rate' => $u['rate'],*/
-                'current_hospital' => $u['chospital'],
-                'graduation_year' => $u['gyear'],
-                'experience_years' => $u['eyears'],
-                'experiences' =>$u['achievement'],
-                'about' => $u['about'],
-                'salary' => $u['salary'],
+                'current_hospital' => $chospital,
+                'graduation_year' => $gyear,
+                'experience_years' => $eyears,
+                'experiences' =>$achievement,
+                'about' => $about,
+                'salary' => $salary,
                 /*                'certificate_count' => $request->data->certificate_count,*/
             ]);
             $token = $user->createToken('main')->plainTextToken;
@@ -90,7 +143,6 @@ class authController extends Controller
             'user_id'=>$user_id
         ];
         $message="information retreived successfully";
-        $token = $user->createToken('main')->plainTextToken;
         return response(compact('state', 'message','data'),200);
     }
     /*
