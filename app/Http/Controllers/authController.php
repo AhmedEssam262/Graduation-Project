@@ -17,6 +17,33 @@ class authController extends Controller
     {
         $this->middleware('auth:api', ['except' => ['login','adduser','chkuname']]);
     }
+    public function user_after_login(){
+        if(!Auth::user()){
+            $state= 'not authorized to access';
+            $message = 'cannot access to api resources';
+            $data = [
+                'name'=>'JsonWebTokenError',
+                'message'=>'invalid token'
+            ];
+            return response(compact('state', 'message','data'),401);
+
+        }
+        $state= 'good, ok';
+        $message = 'information retreived successfully';
+        $user =Auth::user();
+        $data = [
+            'user_id'=>$user->id,
+            'user_name'=>$user->username,
+            'nick_name'=>$user->name,
+            'user_type'=>$user->user_type,
+            'bdate'=>$user->bdate,
+            'gender'=>$user->gender,
+            'img_url'=>$user->img_url
+        ];
+        return response(compact('state', 'message','data'),200);
+    }
+
+
 
 
     public function adduser(Request $request)
