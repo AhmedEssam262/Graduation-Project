@@ -19,12 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::post('/adduser', [authController::class, 'adduser']);      //right
 Route::post('/login', [authController::class, 'login']);//right
 Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //right
+Route::get('/user', [authController::class, 'user_after_login']);      //right
 
 Route::get('/feedback/',[feedbackController::class,'filter_feedback']);      //right
 Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
