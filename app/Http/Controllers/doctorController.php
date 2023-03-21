@@ -21,14 +21,14 @@ class doctorController extends Controller
 
         $doctor = Doctor::all();
         if($spec!=null && $doc_name==null){
-            $doctor = Doctor::where('specialty','=',$spec);
+            $doctor = Doctor::where('specialty','=',$spec)->get();
         }
         if($spec==null && $doc_name!=null){
-            $doctor = Doctor::where('name','=',$doc_name);
+            $doctor = Doctor::where('name','LIKE','%'.$doc_name.'%')->get();
         }
 
         if($spec!=null && $doc_name!=null){
-            $doctor = Doctor::where(['name','=',$doc_name],['specialty','=',$spec]);
+            $doctor = Doctor::where([['name','LIKE','%'.$doc_name.'%'],['specialty','=',$spec]])->get();
         }
 
         $data = array();
