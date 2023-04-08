@@ -28,7 +28,7 @@ class doctorController extends Controller
         }
 
         if($spec!=null && $doc_name!=null){
-            $doctor = Doctor::where([['name','LIKE','%'.$doc_name.'%'],['specialty','=',$spec]])->get();
+            $doctor = Doctor::where(['name','LIKE','%'.$doc_name.'%'],['specialty','=',$spec])->get();
         }
 
         $data = array();

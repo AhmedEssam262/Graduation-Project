@@ -11,8 +11,13 @@
         "laravel/jetstream": "^3.0",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
+<<<<<<< HEAD
         "livewire/livewire": "^2.11",
         "php-open-source-saver/jwt-auth": "^2.1"
+=======
+        "laravel/ui": "^4.2",
+        "livewire/livewire": "^2.11"
+>>>>>>> 1f2f309 (after installing needed packages)
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

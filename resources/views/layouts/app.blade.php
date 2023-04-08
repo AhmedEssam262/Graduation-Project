@@ -12,7 +12,12 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
+<<<<<<< HEAD
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+=======
+        @viteReactRefresh
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+>>>>>>> 1f2f309 (after installing needed packages)
 
         <!-- Styles -->
         @livewireStyles

@@ -14,7 +14,11 @@ return [
     */
 
     'defaults' => [
+<<<<<<< HEAD
         'guard' => 'api',
+=======
+        'guard' => 'web',
+>>>>>>> 1f2f309 (after installing needed packages)
         'passwords' => 'users',
     ],
 
@@ -40,10 +44,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+<<<<<<< HEAD
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+=======
+>>>>>>> 1f2f309 (after installing needed packages)
     ],
 
     /*

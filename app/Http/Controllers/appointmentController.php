@@ -240,7 +240,9 @@ class appointmentController extends Controller
             return response(compact('state', 'message','data'),401);
         }
         $date = $_GET['date'];
+
         $user_id =Auth::user()->id;
+
         $state= 'good, ok';
         $message = 'information retreived successfully';
 
@@ -280,6 +282,7 @@ class appointmentController extends Controller
         }
         // Patient Appointments
         $all_data = Appointment::where([['booked_from', '=', $user_id], ['schedule_date', '=', $date]])->get();
+
         $user_data=User::where( 'id','=',$user_id)->first();
 
         $data = array();
