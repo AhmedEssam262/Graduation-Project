@@ -15,8 +15,35 @@ class authController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','adduser','chkuname','user']]);
+        $this->middleware('auth:api', ['except' => ['login','adduser','chkuname']]);
     }
+    public function user_after_login(){
+        if(!Auth::user()){
+            $state= 'not authorized to access';
+            $message = 'cannot access to api resources';
+            $data = [
+                'name'=>'JsonWebTokenError',
+                'message'=>'invalid token'
+            ];
+            return response(compact('state', 'message','data'),401);
+
+        }
+        $state= 'good, ok';
+        $message = 'information retreived successfully';
+        $user =Auth::user();
+        $data = [
+            'user_id'=>$user->id,
+            'user_name'=>$user->username,
+            'nick_name'=>$user->name,
+            'user_type'=>$user->user_type,
+            'bdate'=>$user->bdate,
+            'gender'=>$user->gender,
+            'img_url'=>$user->img_url
+        ];
+        return response(compact('state', 'message','data'),200);
+    }
+
+
 
 
     public function adduser(Request $request)
@@ -151,10 +178,8 @@ class authController extends Controller
     public function login(Request $request){
         $credentials = ($request->input('data'));
         $username=$credentials['username'];
-        $cred['username']=$username;
-        $cred['password']=$credentials['password'];
-        if (Auth::attempt($cred)) {
-            $token=Auth::attempt($cred);
+        if (Auth::attempt($credentials)) {
+            $token=Auth::attempt($credentials);
             $state= "good, ok";
             $message= "information retreived successfully";
             $user = User::where('username',$username)->first();
@@ -184,35 +209,9 @@ class authController extends Controller
         return response(compact('state', 'message','data'),400);
     }
 
-    public function user()
-    {
-        if(!Auth::user()){
-            $state = "not authorized to access";
-            $message = "cannot access to api resources";
-            $data = [
-                'name'=>"JsonWebTokenError",
-                'message'=>"invalid token"
-            ];
-            return response(compact('state', 'message','data'),401);
-        }
-        $state = "good, ok";
-        $message = "information retreived successfully";
-        $user=Auth::user();
-        $data = [
-            'user_id'=>$user->id,
-            'user_name'=>$user->name,
-            'user_type'=>$user->user_type,
-            'nick_name'=>$user->name,
-            'bdate'=>$user->bdate,
-            'gender'=>$user->gender,
-            'img_url'=>$user->img_url,
-        ];
-        return response(compact('state', 'message','data'),200);
-
-    }
-        /*
-        * ******************************************** Check user ********************************************
-         */
+    /*
+    * ******************************************** Check user ********************************************
+     */
     public function chkuname($username)
     {
         $users = User::where('username',$username)->first();

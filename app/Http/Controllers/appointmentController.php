@@ -30,34 +30,40 @@ class appointmentController extends Controller
         $date = $all_data['date'];
 
         if(array_key_exists("addedAppointments",$all_data)) {
+
             $addedAppointments = $all_data['addedAppointments'];
-            foreach ($addedAppointments as $s) {
-                $user = Appointment::create([
-                    'schedule_date' => $date,
-                    'schedule_from' => $doctor_id,
-                    'slot_time' => $s['slotTime'],
-                    'appointment_type'=> $s['appointmentType'],
-                    'duration'=>$s['appointmentDuration'],
-                ]);
+            if($addedAppointments!=null) {
+
+                foreach ($addedAppointments as $s) {
+                    $user = Appointment::create([
+                        'schedule_date' => $date,
+                        'schedule_from' => $doctor_id,
+                        'slot_time' => $s['slotTime'],
+                        'appointment_type' => $s['appointmentType'],
+                        'duration' => $s['appointmentDuration'],
+                    ]);
+                }
+                $state = "good, ok";
+                $message = "your data added successfully";
+                $data = [
+                    'isFirst' => 1
+                ];
+                return response(compact('state', 'message', 'data'), 200);
             }
-            $state="good, ok";
-            $message="your data added successfully";
-            $data = [
-                'isFirst'=>1
-            ];
-            return response(compact('state','message','data'), 200);
         }
         /*
          ************************************** Delete appointment **************************************
          */
         if(array_key_exists("deletedAppointments",$all_data)) {
             $deletedAppointments = $all_data['deletedAppointments'];
-           // return response(compact('deletedAppointments'), 200);
+            $del_slot=$deletedAppointments[0];
+/*            return response(compact('del_slot'), 200);*/
 
-            $date_delete = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $deletedAppointments],['appointment_state', '=', 'free']])->first();
+            $date_delete = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $del_slot],['appointment_state', '=', 'free']])->first();
+/*            return response(compact('date_delete'), 200);*/
 
             if(!empty($date_delete)){
-                $del = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $deletedAppointments],['appointment_state', '=', 'free']])->first();
+                $del = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $del_slot],['appointment_state', '=', 'free']])->first();
                 $del->delete();
                 $state="good, ok";
                 $message="information retreived successfully";
@@ -184,7 +190,10 @@ class appointmentController extends Controller
         ];
         return response(compact('state', 'message','data'),200);
     }
-
+/*
+ *
+ * Cancel Appointments
+ */
     public function cancel_appointment(Request $request){
         if(!Auth::user()){
             $state="not authorized to access";
@@ -198,12 +207,12 @@ class appointmentController extends Controller
 
         $all_data = ($request->input('data'));
         $date = $all_data['date'];
-        $cancelFrom = $all_data['cancelFrom'];
+        $cancelFrom = $all_data['From'];
         $bookedSlot = $all_data['bookedSlot'];
         $state="state";
         $message="information retreived successfully";
         if($cancelFrom=='doctor'){
-            $doctor_id = $_GET['userid'];
+            $doctor_id = Auth::user()->id;;
             $data_update = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $bookedSlot]])->first();
             $data_update->appointment_state="cancelled";
             $data_update->save();
@@ -213,11 +222,12 @@ class appointmentController extends Controller
             return response(compact('state', 'message','data'),200);
 
         }
-        $user_id = $_GET['userid'];
+        $user_id = Auth::user()->id;
         $doc_user = $all_data['doctorId'];
         $doctor = Doctor::where('user_id', $doc_user)->first();
 
-        $doctor_id = $doctor->id;
+        $doctor_id =  $all_data['doctorId'];
+
         $data_update = Appointment::where([['schedule_from', '=', $doctor_id],['booked_from', '=', $user_id], ['schedule_date', '=', $date], ['slot_time', '=', $bookedSlot]])->first();
 /*        return response(compact('data_update'),200);*/
         $data_update->appointment_state="cancelled";
@@ -240,9 +250,7 @@ class appointmentController extends Controller
             return response(compact('state', 'message','data'),401);
         }
         $date = $_GET['date'];
-
         $user_id =Auth::user()->id;
-
         $state= 'good, ok';
         $message = 'information retreived successfully';
 
@@ -282,7 +290,6 @@ class appointmentController extends Controller
         }
         // Patient Appointments
         $all_data = Appointment::where([['booked_from', '=', $user_id], ['schedule_date', '=', $date]])->get();
-
         $user_data=User::where( 'id','=',$user_id)->first();
 
         $data = array();

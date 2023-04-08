@@ -1,13 +1,10 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\authController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\testcontroller;
 use App\Http\Controllers\userController;
 use App\Models\User;
-=======
->>>>>>> 1f2f309 (after installing needed packages)
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,10 +31,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-<<<<<<< HEAD
 Route::post('/adduser', [authController::class, 'adduser']);
 Route::post('/login', [authController::class, 'login']);
 Route::get('/user/{id}',[userController::class,'getUserData']);
 Route::get('/doctor/{id}',[doctorController::class,'getDoctorData']);
-=======
->>>>>>> 1f2f309 (after installing needed packages)

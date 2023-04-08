@@ -1,13 +1,10 @@
 <?php
 
-<<<<<<< HEAD
 use App\Http\Controllers\appointmentController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
 use App\Http\Controllers\userController;
-=======
->>>>>>> 1f2f309 (after installing needed packages)
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-<<<<<<< HEAD
-
 Route::post('/adduser', [authController::class, 'adduser']);      //right
 Route::post('/login', [authController::class, 'login']);//right
 Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //right
-Route::get('/user', [authController::class, 'user']);
+Route::get('/user', [authController::class, 'user_after_login']);      //right
 
 Route::get('/feedback/',[feedbackController::class,'filter_feedback']);      //right
 Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
@@ -42,8 +37,3 @@ Route::get('get/appointments',[appointmentController::class,'get_appointments'])
 Route::post('get/slots',[appointmentController::class,'get_slots']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
-=======
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
->>>>>>> 1f2f309 (after installing needed packages)

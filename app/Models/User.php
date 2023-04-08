@@ -9,13 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-<<<<<<< HEAD
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
-=======
-
-class User extends Authenticatable
->>>>>>> 1f2f309 (after installing needed packages)
 {
     use HasApiTokens;
     use HasFactory;
@@ -30,7 +25,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-<<<<<<< HEAD
         'id',
         'email',
         'password',
@@ -45,10 +39,6 @@ class User extends Authenticatable
         'street',
         'prefix',
         'moreInf'
-=======
-        'email',
-        'password',
->>>>>>> 1f2f309 (after installing needed packages)
     ];
 
     /**
@@ -62,14 +52,10 @@ class User extends Authenticatable
         'two_factor_recovery_codes',
         'two_factor_secret',
     ];
-<<<<<<< HEAD
     public function staff()
     {
         return $this->hasOne(Doctor::class);
     }
-=======
-
->>>>>>> 1f2f309 (after installing needed packages)
     /**
      * The attributes that should be cast.
      *
@@ -87,7 +73,6 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-<<<<<<< HEAD
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -98,6 +83,4 @@ class User extends Authenticatable
         return [];
     }
 
-=======
->>>>>>> 1f2f309 (after installing needed packages)
 }
