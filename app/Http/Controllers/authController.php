@@ -85,12 +85,28 @@ class authController extends Controller
         if(isset($u['phone'])){
             $phone=$u['phone'];
         }
-        $images=null;
+        $images=array();
         if(isset($u['images'])){
             $images=$u['images'];
         }
+        $address=null;
+        if(isset($u['address'])){
+            $address=$u['address'];
+        }
 
 
+        $city=null;
+        if(isset($address['city'])){
+            $city=$address['city'];
+        }
+        $street=null;
+        if(isset($address['street'])){
+            $street=$address['street'];
+        }
+        $province=null;
+        if(isset($address['province'])){
+            $province=$address['province'];
+        }
         $state="good, ok";
         $user = User::create([
             'name' => $u['nickname'],
@@ -101,8 +117,11 @@ class authController extends Controller
             'bdate' =>$bdate,
             'gender' => $u['gender'],
             'prefix' =>$prefix,
+            'city' =>$city,
+            'street' =>$street,
+            'province' =>$province,
             'phone' =>$phone,
-            'img_url' =>$images,
+            'img_url' =>$images[0],
         ]);
 
         $data = User::where('username',$x)->first();

@@ -316,6 +316,50 @@ class appointmentController extends Controller
             array_push($data, $data_push);
         }
         return response(compact('state', 'message','data'),200);
+    }
+
+/*
+ * edit appointment
+ */
+    public function edit_appointments(Request $request)
+    {
+        if(!Auth::user()){
+            $state="not authorized to access";
+            $message="cannot access to api resources";
+            $data = [
+                'isUser'=>0
+            ];
+            return response(compact('state', 'message','data'),401);
+        }
+        $doctor_id =Auth::user()->id;
+        $all_data = ($request->input('data'));
+        $date = $all_data['date'];
+        $editSlot = $all_data['editSlot'];
+        $appointment_edit = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $editSlot]])->first();
+        //$appointment_edit = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $editSlot],['appointment_state', '=', 'free']])->first();
+
+        if(array_key_exists("addedAppointments",$all_data)) {
+
+            $addedAppointments = $all_data['addedAppointments'];
+
+            if($addedAppointments!=null) {
+/*                return response(compact('addedAppointments'), 200);*/
+                $temp=$addedAppointments[0];
+/*                return response(compact('xx'), 200);*/
+
+                $appointment_edit->slot_time=$temp['slotTime'];
+                $appointment_edit->duration=$temp['appointmentDuration'];
+                $appointment_edit->appointment_type=$temp['appointmentType'];
+                $appointment_edit->save();
+                $state = "good, ok";
+                $message = "your data added successfully";
+                $data = [
+                    'done' => true
+                ];
+                return response(compact('state', 'message', 'data'), 200);
+            }
+        }
 
     }
+
 }

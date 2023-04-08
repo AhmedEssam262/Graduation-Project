@@ -19,7 +19,5 @@ class Appointment extends Model
         'duration',
         'appointment_type',
         'appointment_state'
-
-
     ];
 }

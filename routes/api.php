@@ -26,6 +26,8 @@ Route::get('/user', [authController::class, 'user_after_login']);      //right
 
 Route::get('/feedback/',[feedbackController::class,'filter_feedback']);      //right
 Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
+Route::post('submit/personal',[userController::class,'editUser']);           //right
+Route::post('submit/medical',[userController::class,'add_medical']);
 
 Route::get('/doctors',[doctorController::class,'getDoctorData']);      //right
 
@@ -35,5 +37,6 @@ Route::post('book/appointment',[appointmentController::class,'book_appointment']
 Route::post('cancel/appointment',[appointmentController::class,'cancel_appointment']);
 Route::get('get/appointments',[appointmentController::class,'get_appointments']);
 Route::post('get/slots',[appointmentController::class,'get_slots']);
+Route::post('edit/appointment',[appointmentController::class,'edit_appointments']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
