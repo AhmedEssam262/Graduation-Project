@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Message;
 use App\Models\User;
 use App\Models\Doctor;
 use App\Models\Staff;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class feedbackController extends Controller
 {
@@ -16,9 +18,6 @@ class feedbackController extends Controller
         $limit=0;
         if(isset($_GET['username'])){
             $username=$_GET['username'];
-
-
-
             $doctor = Doctor::where('username', $username)->first();
             $doctor_user = User::where('username', $username)->first();
             $feedback = feedback::where('feedback_to', $doctor->user_id)->get()->limit(5);
@@ -76,7 +75,6 @@ class feedbackController extends Controller
             }
             return response(compact('res'), 200);
         }
-
         $feedback = feedback::all()->get()->limit(5);
         $res = array();
         foreach ($feedback as $f) {
@@ -103,5 +101,40 @@ class feedbackController extends Controller
         }
         return response(compact('res'), 200);
 
+    }
+    public function add_feedback(Request $request)
+    {
+        if(!Auth::user()){
+            $state="not authorized to access";
+            $message="cannot access to api resources";
+            $data = [
+                'isUser'=>0
+            ];
+            return response(compact('state', 'message','data'),401);
+        }
+        $user_id =Auth::user()->id;
+        $all_data = ($request->input('data'));
+        $rate=$all_data['rate'];
+        $feedback=$all_data['feedback'];
+        $feedback_to=$all_data['feedback_to'];
+        $all_feed=Feedback::where([['feedback_from', '=', $user_id]],['feedback_to', '=', $feedback_to])->first();
+        $first=false;
+        if(empty($all_feed)) {
+            $first=true;
+        }
+        $feed=Feedback::create([
+            'feedback_from'=>$user_id,
+            'feedback_to'=>$feedback_to,
+            'rate'=>$rate,
+            'feedback'=>$feedback,
+        ]);
+
+
+        $state="good, ok";
+        $message="your data added successfully";
+        $data = [
+            'isFirst' => $first
+        ];
+        return response(compact('state', 'message', 'data'), 200);
     }
 }
