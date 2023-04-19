@@ -5,12 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reply extends Model
+class Message extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'post_id',
-        'reply_id',
-        'reply_on'
+        'message_from',
+        'message_to',
+        'content',
+        'issued_date',
+        'issued_time'
     ];
 }

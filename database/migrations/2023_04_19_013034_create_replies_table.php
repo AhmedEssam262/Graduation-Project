@@ -16,10 +16,12 @@ return new class extends Migration
         Schema::create('replies', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('reply_id');
+            $table->unsignedBigInteger('reply_on');
             $table->foreign('post_id')->references('id')->on('posts')->cascadeOnDelete();
             $table->foreign('reply_id')->references('id')->on('comments')->cascadeOnDelete();
             $table->foreign('reply_on')->references('id')->on('comments')->cascadeOnDelete();
-
         });
     }
 
