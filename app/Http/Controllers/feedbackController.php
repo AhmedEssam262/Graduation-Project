@@ -16,19 +16,17 @@ class feedbackController extends Controller
     {
         $username=null;
         $limit=0;
+         $state= "good, ok";
+         $message = "information retreived successfully";
         if(isset($_GET['username'])){
             $username=$_GET['username'];
             $doctor = Doctor::where('username', $username)->first();
             $doctor_user = User::where('username', $username)->first();
-            $feedback = feedback::where('feedback_to', $doctor->user_id)->get()->limit(5);
-            $res = array();
+            $feedback = feedback::where('feedback_to', $doctor->user_id)->skip(0)->take(5)->get();
+            $data = array();
             foreach ($feedback as $f) {
                 $userpat = User::where('id', $f->feedback_from)->first();
                 $userData = [
-                    'state' => 'good, ok',
-                    'message' => 'information retreived successfully',
-                    'data' => [
-                        'user' => [
                             'feedback_from' => $f->feedback_from,
                             'feedback_to' => $f->feedback_to,
                             'rate' => $f->rate,
@@ -38,26 +36,20 @@ class feedbackController extends Controller
                             'dimgUrl' => $doctor_user->img_url,
                             'username' => $userpat->username,
                             'doctorName' => $doctor->name,
-                        ]
-                    ]
                 ];
-                array_push($res, $userData);
+                array_push($data, $userData);
 
             }
-            return response(compact('res'), 200);
+            return response(compact('state','message','data'), 200);
         }
         if(isset($_GET['limit'])){
             $limit=$_GET['limit'];
-            $feedback = feedback::all()->get()->limit($limit);
-            $res = array();
+            $feedback = feedback::limit($limit)->get();
+            $data = array();
             foreach ($feedback as $f) {
                 $userpat = User::where('id', $f->feedback_from)->first();
                 $userpdoc = User::where('id', $f->feedback_to)->first();
                 $userData = [
-                    'state' => 'good, ok',
-                    'message' => 'information retreived successfully',
-                    'data' => [
-                        'user' => [
                             'feedback_from' => $f->feedback_from,
                             'feedback_to' => $f->feedback_to,
                             'rate' => $f->rate,
@@ -67,24 +59,18 @@ class feedbackController extends Controller
                             'dimgUrl' => $userpdoc->img_url,
                             'username' => $userpat->username,
                             'doctorName' => $userpdoc->name,
-                        ]
-                    ]
                 ];
-                array_push($res, $userData);
+                array_push($data, $userData);
 
             }
-            return response(compact('res'), 200);
+            return response(compact('state','message','data'), 200);
         }
-        $feedback = feedback::all()->get()->limit(5);
-        $res = array();
+        $feedback = feedback::limit(10)->get();
+        $data = array();
         foreach ($feedback as $f) {
             $userpat = User::where('id', $f->feedback_from)->first();
             $userpdoc = User::where('id', $f->feedback_to)->first();
             $userData = [
-                'state' => 'good, ok',
-                'message' => 'information retreived successfully',
-                'data' => [
-                    'user' => [
                         'feedback_from' => $f->feedback_from,
                         'feedback_to' => $f->feedback_to,
                         'rate' => $f->rate,
@@ -94,12 +80,10 @@ class feedbackController extends Controller
                         'dimgUrl' => $userpdoc->img_url,
                         'username' => $userpat->username,
                         'doctorName' => $userpdoc->name,
-                    ]
-                ]
             ];
-            array_push($res, $userData);
+            array_push($data, $userData);
         }
-        return response(compact('res'), 200);
+        return response(compact('state','message','data'), 200);
 
     }
     public function add_feedback(Request $request)

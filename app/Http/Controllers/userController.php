@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Doctor;
 use App\Models\User;
 use App\Models\History;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +36,7 @@ class userController extends Controller
                             'city' => $user->city,
                             'street' => $user->street,
                             'img_url' => $user->img_url,
-                            'age' => $user->age,
+                            'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
                                 [
                                     'img_url' => $user->img_url
@@ -78,7 +79,7 @@ class userController extends Controller
                             'city' => $user->city,
                             'street' => $user->street,
                             'img_url' => $user->img_url,
-                            'age' => $user->age,
+                            'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
                                 [
                                     'img_url' => $user->img_url
@@ -112,7 +113,7 @@ class userController extends Controller
                             'city' => $user->city,
                             'street' => $user->street,
                             'img_url' => $user->img_url,
-                            'age' => $user->age,
+                            'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
                                 [
                                     'img_url' => $user->img_url
@@ -155,7 +156,7 @@ class userController extends Controller
                             'city' => $user->city,
                             'street' => $user->street,
                             'img_url' => $user->img_url,
-                            'age' => $user->age,
+                            'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
                                 [
                                     'img_url' => $user->img_url

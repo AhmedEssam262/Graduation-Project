@@ -87,8 +87,13 @@ class authController extends Controller
         }
         $images=array();
         if(isset($u['images'])){
-            $images=$u['images'];
+            array_push($images, $u['images']);
         }
+        else{
+            array_push($images, 'none');
+
+        }
+
         $address=null;
         if(isset($u['address'])){
             $address=$u['address'];

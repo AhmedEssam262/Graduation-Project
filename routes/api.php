@@ -27,7 +27,7 @@ Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //
 Route::get('/user', [authController::class, 'user_after_login']);      //right
 
 Route::post('submit/feedback',[feedbackController::class,'add_feedback']);      //right
-Route::get('/feedback/',[feedbackController::class,'filter_feedback']);      //right
+Route::get('/get/feedback/',[feedbackController::class,'filter_feedback']);      //right
 
 Route::get('/profile/{username}',[userController::class,'getUserData']);           //right
 Route::post('submit/personal',[userController::class,'editUser']);           //right
@@ -50,4 +50,6 @@ Route::get('get/chat',[chatController::class,'get_chat']);
 
 
 Route::post('submit/post',[postController::class,'post']);
+Route::get('get/posts',[postController::class,'get_posts']);
+Route::get('get/comments',[postController::class,'get_comments']);
 Route::post('submit/comment',[postController::class,'comment']);
