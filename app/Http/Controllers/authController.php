@@ -180,6 +180,7 @@ class authController extends Controller
                 'experiences' =>$achievement,
                 'about' => $about,
                 'salary' => $salary,
+                'type' => "pending",
                 /*                'certificate_count' => $request->data->certificate_count,*/
             ]);
             $token = $user->createToken('main')->plainTextToken;

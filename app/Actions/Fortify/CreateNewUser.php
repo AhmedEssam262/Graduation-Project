@@ -21,15 +21,34 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'username' => ['required', 'string', 'max:255', 'unique:users'],
+            'bdate' => ['required', 'date'],
+            'gender' => ['required','string'],
+            'city' => ['required','string'],
+            'street' => ['required','string'],
+            'province' => ['required','string'],
+            'prefix' => ['required','max:2'],
+            'phone' => ['required','max:11'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['accepted', 'required'] : '',
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
+            'username' => $input['username'],
+            'bdate' => $input['bdate'],
+            'gender' => $input['gender'],
+            'prefix' => $input['prefix'],
+            'phone' => $input['phone'],
+            'img_url' => null,
+            'city' => $input['city'],
+            'province' => $input['province'],
+            'street' => $input['street'],
             'email' => $input['email'],
+            'user_type'=>"Admin",
             'password' => Hash::make($input['password']),
+
         ]);
     }
 }

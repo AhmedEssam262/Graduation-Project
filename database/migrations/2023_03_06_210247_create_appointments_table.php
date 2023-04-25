@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('booked_from')->nullable();
             $table->date('schedule_date');
             $table->integer('duration')->nullable();
+            $table->integer('appointmentFees')->nullable();
             $table->string('appointment_type')->nullable();
 
             $table->foreign('booked_from')->references('id')->on('users')->cascadeOnDelete();

@@ -40,6 +40,8 @@ class appointmentController extends Controller
                         'schedule_from' => $doctor_id,
                         'slot_time' => $s['slotTime'],
                         'appointment_type' => $s['appointmentType'],
+                        'appointmentFees'=>$s['appointmentFees'],
+                        'appointmentId'=>$s['id'],
                         'duration' => $s['appointmentDuration'],
                     ]);
                 }
@@ -55,15 +57,14 @@ class appointmentController extends Controller
          ************************************** Delete appointment **************************************
          */
         if(array_key_exists("deletedAppointments",$all_data)) {
-            $deletedAppointments = $all_data['deletedAppointments'];
-            $del_slot=$deletedAppointments[0];
+            $deleted_id= $all_data['deletedAppointments'];
+            $del_id=$deleted_id[0];
 /*            return response(compact('del_slot'), 200);*/
 
-            $date_delete = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $del_slot],['appointment_state', '=', 'free']])->first();
+            $date_delete = Appointment::where('id', '=', $del_id)->first();
 /*            return response(compact('date_delete'), 200);*/
-
             if(!empty($date_delete)){
-                $del = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $del_slot],['appointment_state', '=', 'free']])->first();
+                $del = Appointment::where('id', '=', $del_id)->first();
                 $del->delete();
                 $state="good, ok";
                 $message="information retreived successfully";
@@ -76,7 +77,7 @@ class appointmentController extends Controller
                 $state="bad request";
                 $message="iinf. not found";
                 $data = [
-                    'timeSlots' => $deletedAppointments
+                    'timeSlots' => $date_delete->slot_time
                 ];
                 return response(compact('state','message','data'), 400);
             }
@@ -158,6 +159,9 @@ class appointmentController extends Controller
         foreach ($ts as $t_s){
             $slot['appointmentState']=$t_s->appointment_state;
             $slot['appointmentType']=$t_s->appointment_type;
+            $slot['appointmentFees']=$t_s->appointmentFees;
+            $slot['appointmentId']=$t_s->id;
+            $slot['appointmentId']=$t_s->id;
             $slot['slotTime']=$t_s->slot_time;
             $slot['appointmentDuration']=$t_s->duration;
             array_push($totalSlots, $slot);
@@ -168,6 +172,8 @@ class appointmentController extends Controller
             $slot['appointmentType']=$b_s->appointment_type;
             $slot['slotTime']=$b_s->slot_time;
             $slot['appointmentDuration']=$b_s->duration;
+            $slot['appointmentFees']=$b_s->appointmentFees;
+            $slot['appointmentId']=$b_s->id;
             array_push($bookedSlots, $slot);
         }
 
@@ -176,6 +182,8 @@ class appointmentController extends Controller
             $slot['appointmentType']=$f_s->appointment_type;
             $slot['slotTime']=$f_s->slot_time;
             $slot['appointmentDuration']=$f_s->duration;
+            $slot['appointmentFees']=$f_s->appointmentFees;
+            $slot['appointmentId']=$f_s->id;
             array_push($freeSlots, $slot);
         }
         if (empty($freeSlots)) {
@@ -207,7 +215,7 @@ class appointmentController extends Controller
 
         $all_data = ($request->input('data'));
         $date = $all_data['date'];
-        $cancelFrom = $all_data['From'];
+        $cancelFrom = $all_data['cancelFrom'];
         $bookedSlot = $all_data['bookedSlot'];
         $state="state";
         $message="information retreived successfully";
@@ -262,6 +270,7 @@ class appointmentController extends Controller
 
             $data = array();
             foreach ($all_data as $d) {
+
                 $doctorData = [
                     'patientId' => $d->booked_from,
                     'doctorId' => $user_id,
@@ -269,6 +278,8 @@ class appointmentController extends Controller
                     'booked_time' => $d->updated_at,
                     'slot_time' => $d->slot_time,
                     'appointment_state' => $d->appointment_state,
+                    'appointmentFees' => $d->appointmentFees,
+                    'appointmentId' => $d->id,
                     'appointment_type' => $d->appointment_type,
                     'uimgUrl'=> null,
                     'dimgUrl'=> $user_data->img_url,
@@ -304,6 +315,8 @@ class appointmentController extends Controller
                 'booked_time' => $d->updated_at,
                 'slot_time' => $d->slot_time,
                 'appointment_state' => $d->appointment_state,
+                'appointmentFees' => $d->appointmentFees,
+                'appointmentId' => $d->id,
                 'appointment_type' => $d->appointment_type,
                 'uimgUrl'=> $user_data->img_url,
                 'dimgUrl'=> $doctor_user->img_url,
@@ -334,22 +347,26 @@ class appointmentController extends Controller
         $doctor_id =Auth::user()->id;
         $all_data = ($request->input('data'));
         $date = $all_data['date'];
-        $editSlot = $all_data['editSlot'];
-        $appointment_edit = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $editSlot]])->first();
+        $edited_id=$all_data['editSlot'];
+        $edit_id=$edited_id[0];
+        $editSlot = $all_data['addedAppointments'];
+
+        $appointment_edit = Appointment::where('id', '=', $edit_id)->first();
+
         //$appointment_edit = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $editSlot],['appointment_state', '=', 'free']])->first();
 
         if(array_key_exists("addedAppointments",$all_data)) {
-
             $addedAppointments = $all_data['addedAppointments'];
 
             if($addedAppointments!=null) {
 /*                return response(compact('addedAppointments'), 200);*/
                 $temp=$addedAppointments[0];
-/*                return response(compact('xx'), 200);*/
+/*                return response(compact('appointment_edit'), 200);*/
 
                 $appointment_edit->slot_time=$temp['slotTime'];
                 $appointment_edit->duration=$temp['appointmentDuration'];
                 $appointment_edit->appointment_type=$temp['appointmentType'];
+                $appointment_edit->appointmentFees=$temp['appointmentFees'];
                 $appointment_edit->save();
                 $state = "good, ok";
                 $message = "your data added successfully";

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('about')->nullable();;
             $table->string('salary')->nullable();;
             $table->string('certificate_count')->nullable();
+            $table->string('type')->nullable();
         });
     }
 

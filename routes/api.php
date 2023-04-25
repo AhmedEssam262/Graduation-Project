@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\adminController;
 use App\Http\Controllers\appointmentController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\chatController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
+use App\Http\Controllers\paymentController;
 use App\Http\Controllers\postController;
 use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
@@ -53,3 +55,6 @@ Route::post('submit/post',[postController::class,'post']);
 Route::get('get/posts',[postController::class,'get_posts']);
 Route::get('get/comments',[postController::class,'get_comments']);
 Route::post('submit/comment',[postController::class,'comment']);
+
+Route::post('/payment/stripe',[paymentController::class,'pay']);
+Route::post('/change/doctor',[adminController::class,'verification']);

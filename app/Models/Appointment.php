@@ -15,6 +15,7 @@ class Appointment extends Model
         'rate',
         'feedback',
         'schedule_date',
+        'appointmentFees',
         'slot_time',
         'duration',
         'appointment_type',
