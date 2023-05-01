@@ -40,21 +40,23 @@ class doctorController extends Controller
             $state= 'good, ok';
             $message = 'information retreived successfully';
             foreach ($doctor as $d) {
-                $ver=false;
+                $ver=null;
                 if($d->type=="verified"){
-                    $ver=true;
+                    $ver=1;
+                }
+                else if($d->type=="reject"){
+                    $ver=0;
                 }
                 $doctorData = [
                     'doctor_id' => $d->user_id,
                     'user_name' => $d->username,
                     'rate' => $d->rate,
                     'specialty' => $d->specialty,
-                    'type' => $ver,
+                    'is_verified' => $ver,
                     'nick_name' => $d->name,
                     'fees' => $d->salary,
                     'about' => $d->about,
                     'img_urls' => $d->img_url
-
                 ];
                 array_push($data, $doctorData);
             }
@@ -86,9 +88,12 @@ class doctorController extends Controller
         $state= 'good, ok';
         $message = 'information retreived successfully';
         foreach ($doctor as $d) {
-            $ver=false;
+            $ver=null;
             if($d->type=="verified"){
-                $ver=true;
+                $ver=1;
+            }
+            else if($d->type=="reject"){
+                $ver=0;
             }
             $doctorData = [
                 'doctor_id' => $d->user_id,
@@ -100,7 +105,6 @@ class doctorController extends Controller
                 'fees' => $d->salary,
                 'about' => $d->about,
                 'img_urls' => $d->img_url
-
             ];
             array_push($data, $doctorData);
         }

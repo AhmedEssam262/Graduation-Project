@@ -17,6 +17,7 @@ class Doctor extends Model
         'specialty',
         'current_hospital',
         'age',
+        'type',
         'rate',
         'graduation_year',
         'experience_years',

@@ -41,7 +41,6 @@ class appointmentController extends Controller
                         'slot_time' => $s['slotTime'],
                         'appointment_type' => $s['appointmentType'],
                         'appointmentFees'=>$s['appointmentFees'],
-                        'appointmentId'=>$s['id'],
                         'duration' => $s['appointmentDuration'],
                     ]);
                 }
