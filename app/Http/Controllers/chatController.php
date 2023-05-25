@@ -112,15 +112,25 @@ class chatController extends Controller
         foreach ($all_msg as $msg){
             $time=$msg->issued_time;
             $temp = explode(' ',$time);
-
-            $res=[
-                'message_id'=> $msg->id,
-                'message_from'=> $user1_id,
-                'message_to'=> $user2_id,
-                'content'=>$msg->content,
-                'issued_date'=>$temp[0],
-                'issued_time'=>$temp[1]
-            ];
+            if($user1_id ==$msg->message_from) {
+                $res = [
+                    'message_id' => $msg->id,
+                    'message_from' => $user1_id,
+                    'message_to' => $user2_id,
+                    'content' => $msg->content,
+                    'issued_date' => $temp[0],
+                    'issued_time' => $temp[1]
+                ];
+            }else{
+                $res = [
+                    'message_id' => $msg->id,
+                    'message_from' => $user2_id,
+                    'message_to' => $user1_id,
+                    'content' => $msg->content,
+                    'issued_date' => $temp[0],
+                    'issued_time' => $temp[1]
+                ];
+            }
             array_push($data, $res);
         }
         $state="good, ok";

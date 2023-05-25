@@ -6,6 +6,7 @@ use App\Http\Controllers\authController;
 use App\Http\Controllers\chatController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
+use App\Http\Controllers\homeController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\postController;
 use App\Http\Controllers\userController;
@@ -58,3 +59,7 @@ Route::post('submit/comment',[postController::class,'comment']);
 
 Route::post('/payment/stripe',[paymentController::class,'pay']);
 Route::post('/change/doctor',[adminController::class,'verification']);
+Route::post('/change/user',[adminController::class,'change_user']);
+
+
+Route::get('/general/statistics',[homeController::class,'getStatistics']);

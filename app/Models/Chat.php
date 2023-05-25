@@ -11,5 +11,6 @@ class Chat extends Model
     protected $fillable = [
         'chat_from',
         'chat_to',
+        'is_open',
     ];
 }

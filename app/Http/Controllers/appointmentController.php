@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\book_appointment;
+use App\Mail\cancel_appointment;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class appointmentController extends Controller
 {
-/*    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }*/
+    /*    public function __construct()
+        {
+            $this->middleware('auth:api');
+        }*/
     public function sched_appointment(Request $request)
     {
         if(!Auth::user()){
@@ -58,10 +61,10 @@ class appointmentController extends Controller
         if(array_key_exists("deletedAppointments",$all_data)) {
             $deleted_id= $all_data['deletedAppointments'];
             $del_id=$deleted_id[0];
-/*            return response(compact('del_slot'), 200);*/
+            /*            return response(compact('del_slot'), 200);*/
 
             $date_delete = Appointment::where('id', '=', $del_id)->first();
-/*            return response(compact('date_delete'), 200);*/
+            /*            return response(compact('date_delete'), 200);*/
             if(!empty($date_delete)){
                 $del = Appointment::where('id', '=', $del_id)->first();
                 $del->delete();
@@ -95,6 +98,22 @@ class appointmentController extends Controller
             ];
             return response(compact('state', 'message','data'),401);
         }
+        if(isset($_GET['check'])){
+            $check =$_GET['check'];
+                $state = "good, ok";
+                $message = "your data added successfully";
+                $data = [
+                    'done' => 1
+                ];
+            $user_id =Auth::user()->id;
+            $all_data = ($request->input('data'));
+            $doctor_id = $all_data['doctorId'];
+            $doctor=User::where('id','=',$doctor_id)->first();
+            $user=User::where('id','=',$user_id)->first();
+            Mail::to($doctor->email)->send(new book_appointment($all_data,$doctor,$user));
+
+                return response(compact('state', 'message', 'data'), 200);
+        }
         $user_id =Auth::user()->id;
         $all_data = ($request->input('data'));
         $date = $all_data['date'];
@@ -109,6 +128,7 @@ class appointmentController extends Controller
                 'isCanceled'=>true
             ];
             return response(compact('state', 'message','data'),400);
+
         }
 
         elseif ($date_update->appointment_state=='booked'){
@@ -132,6 +152,8 @@ class appointmentController extends Controller
             $data = [
                 'isFirst'=>0
             ];
+            $doctor=User::where('id','=',$doctor_id)->first();
+            $user=User::where('id','=',$user_id)->first();
             return response(compact('state', 'message','data'),201);
         }
         $error="error";
@@ -150,7 +172,7 @@ class appointmentController extends Controller
         $bookedSlots=array();
         $freeSlots=array();
         $ts = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date]])->get();
-/*        return response(compact('ts'),200);*/
+        /*        return response(compact('ts'),200);*/
         $slot=array('appointmentState'=>'0','appointmentType'=>'none','slotTime'=>'12:00 am','appointmentDuration'=>'0' );
 
         $bs = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['appointment_state', '=', 'booked']])->get();
@@ -197,10 +219,10 @@ class appointmentController extends Controller
         ];
         return response(compact('state', 'message','data'),200);
     }
-/*
- *
- * Cancel Appointments
- */
+    /*
+     *
+     * Cancel Appointments
+     */
     public function cancel_appointment(Request $request){
         if(!Auth::user()){
             $state="not authorized to access";
@@ -211,32 +233,42 @@ class appointmentController extends Controller
             return response(compact('state', 'message','data'),401);
         }
 
-
         $all_data = ($request->input('data'));
+
         $date = $all_data['date'];
         $cancelFrom = $all_data['cancelFrom'];
         $bookedSlot = $all_data['bookedSlot'];
+
         $state="state";
         $message="information retreived successfully";
         if($cancelFrom=='doctor'){
             $doctor_id = Auth::user()->id;;
             $data_update = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $bookedSlot]])->first();
+            $user2_id=$data_update->booked_from;
+
+            $user2=User::where('id','=',$user2_id)->first();
+            $user1=User::where('id','=',$doctor_id)->first();
+
+            Mail::to($user2->email)->send(new cancel_appointment($all_data,$user1,$user2));
             $data_update->appointment_state="cancelled";
             $data_update->save();
             $data = [
                 'fromDoctor'=>$doctor_id,
             ];
             return response(compact('state', 'message','data'),200);
-
         }
         $user_id = Auth::user()->id;
         $doc_user = $all_data['doctorId'];
+        $user1=User::where('id','=',$user_id)->first();
+        $user2=User::where('id','=',$doc_user)->first();
+        Mail::to($user2->email)->send(new cancel_appointment($all_data,$user1,$user2));
+
         $doctor = Doctor::where('user_id', $doc_user)->first();
 
         $doctor_id =  $all_data['doctorId'];
 
         $data_update = Appointment::where([['schedule_from', '=', $doctor_id],['booked_from', '=', $user_id], ['schedule_date', '=', $date], ['slot_time', '=', $bookedSlot]])->first();
-/*        return response(compact('data_update'),200);*/
+        /*        return response(compact('data_update'),200);*/
         $data_update->appointment_state="cancelled";
         $data_update->save();
         $data = [
@@ -330,9 +362,9 @@ class appointmentController extends Controller
         return response(compact('state', 'message','data'),200);
     }
 
-/*
- * edit appointment
- */
+    /*
+     * edit appointment
+     */
     public function edit_appointments(Request $request)
     {
         if(!Auth::user()){
@@ -358,9 +390,9 @@ class appointmentController extends Controller
             $addedAppointments = $all_data['addedAppointments'];
 
             if($addedAppointments!=null) {
-/*                return response(compact('addedAppointments'), 200);*/
+                /*                return response(compact('addedAppointments'), 200);*/
                 $temp=$addedAppointments[0];
-/*                return response(compact('appointment_edit'), 200);*/
+                /*                return response(compact('appointment_edit'), 200);*/
 
                 $appointment_edit->slot_time=$temp['slotTime'];
                 $appointment_edit->duration=$temp['appointmentDuration'];
