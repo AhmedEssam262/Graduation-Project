@@ -167,6 +167,7 @@ class chatController extends Controller
                 'img_url'=>$user2->img_url,
                 'user_type'=>$user2->user_type,
                 'specialty'=>$spec,
+                'is_open'=>$chat->is_open,
                 'rate'=>$rate
             ];
             array_push($data, $res);

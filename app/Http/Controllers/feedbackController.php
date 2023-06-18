@@ -14,33 +14,60 @@ class feedbackController extends Controller
 {
     public function filter_feedback()
     {
-        $username=null;
-        $limit=0;
+
          $state= "good, ok";
          $message = "information retreived successfully";
         if(isset($_GET['username'])){
             $username=$_GET['username'];
             $doctor = Doctor::where('username', $username)->first();
-            $doctor_user = User::where('username', $username)->first();
-            $feedback = feedback::where('feedback_to', $doctor->user_id)->skip(0)->take(5)->get();
-            $data = array();
-            foreach ($feedback as $f) {
-                $userpat = User::where('id', $f->feedback_from)->first();
-                $userData = [
-                            'feedback_from' => $f->feedback_from,
-                            'feedback_to' => $f->feedback_to,
-                            'rate' => $f->rate,
-                            'issued_time' => $f->updated_at,
-                            'feedback' => $f->feedback,
-                            'uimgUrl' => $userpat->img_url,
-                            'dimgUrl' => $doctor_user->img_url,
-                            'username' => $userpat->username,
-                            'doctorName' => $doctor->name,
-                ];
-                array_push($data, $userData);
+            if(!empty($doctor)){
+                $doctor_user = User::where('username', $username)->first();
+                $feedback = feedback::where('feedback_to', $doctor->user_id)->skip(0)->take(5)->get();
+                $data = array();
+                foreach ($feedback as $f) {
+                    $userpat = User::where('id', $f->feedback_from)->first();
+                    $userData = [
+                                'feedback_from' => $f->feedback_from,
+                                'feedback_to' => $f->feedback_to,
+                                'rate' => $f->rate,
+                                'issued_time' => $f->updated_at,
+                                'feedback' => $f->feedback,
+                                'uimgUrl' => $userpat->img_url,
+                                'dimgUrl' => $doctor_user->img_url,
+                                'username' => $userpat->username,
+                                'doctorName' => $doctor->name,
+                    ];
+                    array_push($data, $userData);
 
+                }
+                return response(compact('state','message','data'), 200);
             }
-            return response(compact('state','message','data'), 200);
+            //else for id
+            else{
+                $doctor = Doctor::where('user_id', $username)->first();
+
+                $doctor_user = User::where('id', $username)->first();
+                $feedback = feedback::where('feedback_to', $doctor->user_id)->skip(0)->take(5)->get();
+                $data = array();
+                foreach ($feedback as $f) {
+                    $userpat = User::where('id', $f->feedback_from)->first();
+                    $userData = [
+                        'feedback_from' => $f->feedback_from,
+                        'feedback_to' => $f->feedback_to,
+                        'rate' => $f->rate,
+                        'issued_time' => $f->updated_at,
+                        'feedback' => $f->feedback,
+                        'uimgUrl' => $userpat->img_url,
+                        'dimgUrl' => $doctor_user->img_url,
+                        'username' => $userpat->username,
+                        'doctorName' => $doctor->name,
+                    ];
+                    array_push($data, $userData);
+
+                }
+                return response(compact('state','message','data'), 200);
+            }
+
         }
         if(isset($_GET['limit'])){
             $limit=$_GET['limit'];

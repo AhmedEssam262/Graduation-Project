@@ -7,6 +7,8 @@ use App\Http\Controllers\chatController;
 use App\Http\Controllers\doctorController;
 use App\Http\Controllers\feedbackController;
 use App\Http\Controllers\homeController;
+use App\Http\Controllers\likesController;
+use App\Http\Controllers\moreController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\postController;
 use App\Http\Controllers\userController;
@@ -28,6 +30,8 @@ Route::post('/adduser', [authController::class, 'adduser']);      //right
 Route::post('/login', [authController::class, 'login']);//right
 Route::get('/chkuname/{username}', [authController::class, 'chkuname']);      //right
 Route::get('/user', [authController::class, 'user_after_login']);      //right
+Route::get('/users', [adminController::class, 'users']);      //right
+Route::get('/dashboard', [homeController::class, 'dash']);      //right
 
 Route::post('submit/feedback',[feedbackController::class,'add_feedback']);      //right
 Route::get('/get/feedback/',[feedbackController::class,'filter_feedback']);      //right
@@ -63,3 +67,10 @@ Route::post('/change/user',[adminController::class,'change_user']);
 
 
 Route::get('/general/statistics',[homeController::class,'getStatistics']);
+// likes
+Route::post('/submit/like',[likesController::class,'add_like']);
+Route::get('/get/like',[likesController::class,'get_like']);
+
+//clinic details
+Route::post('submit/clinic',[moreController::class,'submit_clinic']);
+

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clinic_detail;
 use App\Models\Doctor;
 use App\Models\User;
 use App\Models\History;
@@ -13,13 +14,20 @@ class userController extends Controller
 {
     public function getUserData($username)
     {
+        $verify=0;
         $user = User::where('username', $username)->first();
         $doctor = Doctor::where('username', $username)->first();
-        $flag=!empty($user);
-/*                return response(compact('flag'),200);*/
+
         if (!empty($user)) {
             if ($user->user_type == 'doctor') {
-                $userData = [
+                $clinic = Clinic_detail::where('doctor_id', $user->id)->first();
+                if ($doctor->type == 'verify') {
+                    $verify=1;
+                }
+                elseif ($doctor->type == 'reject') {
+                    $verify=0;
+                }
+                    $userData = [
                     'state' => 'good, ok',
                     'message' => 'information retreived successfully',
                     'data' => [
@@ -52,10 +60,17 @@ class userController extends Controller
                             'specialty' => $doctor->specialty,
                             'experiences' => $doctor->experiences,
                             'salary' => $doctor->salary,
+                            'is_verified'=>$verify?$verify:null,
+
                             'fees' => $doctor->salary,
                             'certificate_count' => $doctor->certificate_count,
                             'rate' => $doctor->rate,
                             'num_rate' => $doctor->num_rate,
+                            'clinic_prefix'=> $clinic ? $clinic->prefix:null,
+                            'clinic_pnumber'=> $clinic ?$clinic->pnumber:null,
+                            'clinic_tnumber'=> $clinic ?$clinic->tnumber:null,
+                            'clinic_city'=> $clinic ?$clinic->city:null,
+                            'clinic_street'=> $clinic ?$clinic->street:null,
                         ]
 
                     ]
@@ -94,8 +109,17 @@ class userController extends Controller
         else{
             // dearch for id
             $user = User::where('id', $username)->first();
+
             $doctor = Doctor::where('user_id', $username)->first();
+            $clinic = Clinic_detail::where('doctor_id', $username)->first();
+
             if ($user->user_type == 'doctor') {
+                if ($doctor->type == 'verify') {
+                    $verify=1;
+                }
+                elseif ($doctor->type == 'reject') {
+                    $verify=0;
+                }
                 $userData = [
                     'state' => 'good, ok',
                     'message' => 'information retreived successfully',
@@ -111,9 +135,11 @@ class userController extends Controller
                             'email' => $user->email,
                             'province' => $user->province,
                             'city' => $user->city,
+
                             'street' => $user->street,
                             'img_url' => $user->img_url,
                             'age' => Carbon::parse($user->bdate)->age,
+
                             'img_urls' => [
                                 [
                                     'img_url' => $user->img_url
@@ -133,6 +159,13 @@ class userController extends Controller
                             'certificate_count' => $doctor->certificate_count,
                             'rate' => $doctor->rate,
                             'num_rate' => $doctor->num_rate,
+                            'clinic_prefix'=> $clinic ? $clinic->prefix:null,
+                            'clinic_pnumber'=> $clinic ?$clinic->pnumber:null,
+                            'clinic_tnumber'=> $clinic ?$clinic->tnumber:null,
+                            'is_verified'=>$verify?$verify:null,
+
+                            'clinic_city'=> $clinic ?$clinic->city:null,
+                            'clinic_street'=> $clinic ?$clinic->street:null,
                         ]
 
                     ]
@@ -155,6 +188,8 @@ class userController extends Controller
                             'province' => $user->province,
                             'city' => $user->city,
                             'street' => $user->street,
+                            'is_verified'=>1,
+
                             'img_url' => $user->img_url,
                             'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [

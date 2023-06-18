@@ -6,6 +6,7 @@ use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class homeController extends Controller
 {
@@ -22,10 +23,31 @@ class homeController extends Controller
             'avgRate'=>4.7,
             'avgFees'=>200,
             'totalDoctors'=>$total_doctors,
-            'totalReviews'=>$total_feedbacks
+            'totalReviews'=>$total_feedbacks,
+            'is_verified'=>1,
+
         ];
         return response(compact('state', 'message', 'data'), 200);
-
-
     }
+    public function dash(){
+        $state="good, ok";
+        $message="information retreived successfully";
+        $user =Auth::user();
+        if ($user->user_type == 'doctor') {
+            $doctor = Doctor::where('user_id', $user->id)->first();
+            if ($doctor->type == 'verify') {
+                $verify=1;
+            }
+            elseif ($doctor->type == 'reject') {
+                $verify=0;
+            }
+        }
+
+        $data = [
+            'is_verified'=>$verify?$verify:null,
+
+        ];
+        return response(compact('state', 'message', 'data'), 200);
+    }
+
 }

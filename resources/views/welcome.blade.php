@@ -58,7 +58,7 @@
                                 <div class="mt-2 text-gray-600 text-sm">
                                     <?php echo \Carbon\Carbon::now(); ?>
                                     <hr>
-                                    <?php echo \Carbon\Carbon::now()->addHours(1)->format('g:i A'); ?>
+                                    <?php echo \Carbon\Carbon::now()->addHours(1)->addRealMilliseconds(3600000)->format('g:i A'); ?>
                                     <hr>
                                     <?php echo \Carbon\Carbon::now()->addHours(1)->format('Y-m-d '); ?>
 

@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Appointment;
+use App\Models\Chat;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class deleteAppointments extends Command
@@ -18,10 +20,19 @@ class deleteAppointments extends Command
 
     public function handle()
     {
-        $appointments=Appointment::all();
-        $date= \Carbon\Carbon::now()->addHours(1)->format('Y-m-d ');
-        $time=\Carbon\Carbon::now()->addHours(1)->format('g:i A');
-            Appointment::where([['schedule_date', '<', $date],['slot_time','<',$time],['appointment_state','=','free']])->delete();
+//        $date= \Carbon\Carbon::now()->addHours(1)->format('Y-m-d ');
+//        $time=\Carbon\Carbon::now()->addHours(1)->format('g:i A');
+        $appointments=Appointment::where('appointment_state','=','free')->get();
+        foreach ($appointments as $appoint){
+            if ($appoint){
+
+                $currentTime = Carbon::now()->addHours(1)->addMilliseconds(120000);
+            $scheduledTime = Carbon::parse($appoint->schedule_date . ' ' . $appoint->slot_time);
+            if($currentTime->greaterThanOrEqualTo($scheduledTime)){
+                $appoint->delete();
+            }
+        }
+        }
 
     }
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
+use App\Models\Clinic_detail;
 use App\Models\Doctor;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +31,8 @@ class adminController extends Controller
         $state= 'good, ok';
         $message = 'information retreived successfully';
         $data = [
-            'isDone' => true
+            'isDone' => true,
+
         ];
         return response(compact('state', 'message', 'data'), 200);
     }
@@ -79,4 +82,88 @@ class adminController extends Controller
         ];
         return response(compact('state', 'message', 'data'), 200);
     }
+
+    public function users()
+    {
+        $data = array();
+        $users = User::all();
+        /*                return response(compact('flag'),200);*/
+        if (!empty($users)) {
+            foreach ($users as $user){
+            if ($user->user_type == 'doctor') {
+                $doctor=Doctor::where('id',$user->id)->first();
+                $clinic=Clinic_detail::where('doctor_id',$user->id)->first();
+                $userData = [
+                            'user_id' => $user->id,
+                            'nick_name' => $user->name,
+                            'user_type' => $user->user_type,
+                            'bdate' => $user->bdate,
+                            'gender' => $user->gender,
+                            'prefix' => $user->prefix,
+                            'pnumber' => $user->pnumber,
+                            'email' => $user->email,
+                            'province' => $user->province,
+                            'city' => $user->city,
+                            'street' => $user->street,
+                            'img_url' => $user->img_url,
+                            'age' => Carbon::parse($user->bdate)->age,
+                            'img_urls' => [
+                                [
+                                    'img_url' => $user->img_url
+                                ],
+                            'doctor_id' => $user->id,
+                            'current_hospital' =>$doctor? $doctor->current_hospital:null,
+                            'graduation_year' => $doctor?$doctor->graduation_year:null,
+                            'experience_years' =>$doctor? $doctor->experience_years:null,
+                            'about' => $doctor?$doctor->about:null,
+                            'specialty' =>$doctor? $doctor->specialty:null,
+                            'experiences' => $doctor?$doctor->experiences:null,
+                            'salary' => $doctor?$doctor->salary:null,
+                            'fees' => $doctor?$doctor->salary:null,
+                            'certificate_count' => $doctor?$doctor->certificate_count:null,
+                            'rate' => $doctor?$doctor->rate:null,
+                            'num_rate' => $doctor?$doctor->num_rate:null,
+                            'clinic_prefix' => $clinic ? $clinic->prefix : null,
+                            'clinic_pnumber' => $clinic ? $clinic->pnumber : null,
+                            'clinic_tnumber' => $clinic ? $clinic->tnumber : null,
+                            'clinic_city' => $clinic ? $clinic->city : null,
+                            'clinic_street' => $clinic ? $clinic->street : null,
+                        ]
+
+                ];
+
+                array_push($data, $userData);
+
+            } else {
+                $userData = [
+                            'user_id' => $user->id,
+                            'nick_name' => $user->name,
+                            'user_type' => $user->user_type,
+                            'bdate' => $user->bdate,
+                            'gender' => $user->gender,
+                            'prefix' => $user->prefix,
+                            'pnumber' => $user->phone,
+                            'email' => $user->email,
+                            'province' => $user->province,
+                            'city' => $user->city,
+                            'street' => $user->street,
+                            'img_url' => $user->img_url,
+                            'age' => Carbon::parse($user->bdate)->age,
+                            'img_urls' => [
+                                [
+                                    'img_url' => $user->img_url
+                                ]
+                            ]
+                ];
+                array_push($data, $userData);
+
+            }
+        }
+    }
+        $state= 'good, ok';
+        $message = 'information retreived successfully';
+        return response(compact('state','message','data'), 200);
+
+    }
+
 }

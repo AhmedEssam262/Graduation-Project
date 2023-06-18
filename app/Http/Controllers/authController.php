@@ -38,6 +38,7 @@ class authController extends Controller
             'user_type'=>$user->user_type,
             'bdate'=>$user->bdate,
             'gender'=>$user->gender,
+
             'img_url'=>$user->img_url
         ];
         return response(compact('state', 'message','data'),200);
@@ -211,6 +212,7 @@ class authController extends Controller
             $user_id=$user->id;
             $data = [
                 'isVerified'=>1,
+                'is_verified'=>1,
                 "user_id"=> $user_id,
                 "token"=>$token,
                 "type"=>"bearer"

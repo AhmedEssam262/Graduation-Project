@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
-/*         $schedule->command('open_chat')->everyMinute();*/
+         $schedule->command('open_chat')->everyMinute();
          $schedule->command('delete_past_appointments')->everyMinute();
     }
 
@@ -28,7 +28,7 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
-/*        $this->load(__DIR__.'/Commands/openChat.php');*/
+        $this->load(__DIR__.'/Commands/openChat.php');
         $this->load(__DIR__.'/Commands/deleteAppointments.php');
         require base_path('routes/console.php');
     }

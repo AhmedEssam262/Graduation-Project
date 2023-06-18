@@ -50,7 +50,8 @@ class appointmentController extends Controller
                 $state = "good, ok";
                 $message = "your data added successfully";
                 $data = [
-                    'isFirst' => 1
+                    'isFirst' => 1,
+
                 ];
                 return response(compact('state', 'message', 'data'), 200);
             }
@@ -98,7 +99,21 @@ class appointmentController extends Controller
             ];
             return response(compact('state', 'message','data'),401);
         }
-        if(isset($_GET['check'])){
+        $stripeSecretKey="sk_test_51M9qWBLkzeNmV6Wx7H4pWNOFftLNYa2rCd5u3lFC8XEsApi8gMW0FW7zY4zNreicClve5Sj0Y7smYfCf3LcnbDk000lk8tZOuT";
+
+        \Stripe\Stripe::setApiKey($stripeSecretKey);
+        if(isset($_GET['pi'])) {
+             $pi=$_GET['pi'];
+            $intent = \Stripe\PaymentIntent::retrieve($pi);
+
+            if(isset($intent['discription'])) {
+                $disc = $intent['discription'];
+                $appointment_data = json_decode($disc);
+
+            }
+        }
+
+           elseif(isset($_GET['check'])){
             $check =$_GET['check'];
                 $state = "good, ok";
                 $message = "your data added successfully";
@@ -120,6 +135,7 @@ class appointmentController extends Controller
         $booked_slot = $all_data['bookedSlot'];
         $doctor_id = $all_data['doctorId'];
         $date_update = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['slot_time', '=', $booked_slot]])->first();
+        $intent->capture();
 
         if(empty($date_update)){
             $state="bad request";
@@ -171,18 +187,21 @@ class appointmentController extends Controller
         $totalSlots=array();
         $bookedSlots=array();
         $freeSlots=array();
+        $runningSlots=array();
         $ts = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date]])->get();
         /*        return response(compact('ts'),200);*/
-        $slot=array('appointmentState'=>'0','appointmentType'=>'none','slotTime'=>'12:00 am','appointmentDuration'=>'0' );
+        $slot=array('appointmentState'=>'0','appointmentType'=>'none','slotTime'=>'12:00 am','appointmentDuration'=>'0','schedule_date'=>'none', );
 
         $bs = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['appointment_state', '=', 'booked']])->get();
         $fs = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['appointment_state', '=', 'free']])->get();
+        $rs = Appointment::where([['schedule_from', '=', $doctor_id], ['schedule_date', '=', $date], ['appointment_state', '=', 'running']])->get();
         foreach ($ts as $t_s){
             $slot['appointmentState']=$t_s->appointment_state;
             $slot['appointmentType']=$t_s->appointment_type;
             $slot['appointmentFees']=$t_s->appointmentFees;
             $slot['appointmentId']=$t_s->id;
             $slot['appointmentId']=$t_s->id;
+            $slot['schedule_date']=$t_s->schedule_date;
             $slot['slotTime']=$t_s->slot_time;
             $slot['appointmentDuration']=$t_s->duration;
             array_push($totalSlots, $slot);
@@ -193,6 +212,8 @@ class appointmentController extends Controller
             $slot['appointmentType']=$b_s->appointment_type;
             $slot['slotTime']=$b_s->slot_time;
             $slot['appointmentDuration']=$b_s->duration;
+            $slot['schedule_date']=$t_s->schedule_date;
+
             $slot['appointmentFees']=$b_s->appointmentFees;
             $slot['appointmentId']=$b_s->id;
             array_push($bookedSlots, $slot);
@@ -204,8 +225,22 @@ class appointmentController extends Controller
             $slot['slotTime']=$f_s->slot_time;
             $slot['appointmentDuration']=$f_s->duration;
             $slot['appointmentFees']=$f_s->appointmentFees;
+            $slot['schedule_date']=$t_s->schedule_date;
+
             $slot['appointmentId']=$f_s->id;
             array_push($freeSlots, $slot);
+        }
+
+        foreach ($rs as $r_s) {
+            $slot['appointmentState']=$r_s->appointment_state;
+            $slot['appointmentType']=$r_s->appointment_type;
+            $slot['slotTime']=$r_s->slot_time;
+            $slot['appointmentDuration']=$r_s->duration;
+            $slot['appointmentFees']=$r_s->appointmentFees;
+            $slot['schedule_date']=$t_s->schedule_date;
+
+            $slot['appointmentId']=$r_s->id;
+            array_push($runningSlots, $slot);
         }
         if (empty($freeSlots)) {
             $freeSlots=null;
@@ -215,7 +250,8 @@ class appointmentController extends Controller
         $data = [
             'totalSlots'=>$totalSlots,
             'bookedSlots'=>$bookedSlots,
-            'freeSlots'=>$freeSlots
+            'freeSlots'=>$freeSlots,
+            'runningSlots'=>$runningSlots
         ];
         return response(compact('state', 'message','data'),200);
     }
@@ -307,6 +343,7 @@ class appointmentController extends Controller
                     'doctorId' => $user_id,
                     'schedule_date' => $date,
                     'booked_time' => $d->updated_at,
+
                     'slot_time' => $d->slot_time,
                     'appointment_state' => $d->appointment_state,
                     'appointmentFees' => $d->appointmentFees,
@@ -324,6 +361,8 @@ class appointmentController extends Controller
                     "allergies"=> null,
                     "immunizations"=> null,
                     "surgeries"=> null,
+                    'is_verified'=>1,
+
                     "illnesses_history"=> null
                 ];
                 array_push($data, $doctorData);
@@ -356,6 +395,8 @@ class appointmentController extends Controller
                 'rate' =>$doctor_doc->rate,
                 'fees' =>$doctor_doc->salery,
                 'specialty' =>$doctor_doc->specialty,
+                'is_verified'=>1,
+
             ];
             array_push($data, $data_push);
         }
