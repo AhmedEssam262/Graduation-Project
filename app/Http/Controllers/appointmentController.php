@@ -30,7 +30,7 @@ class appointmentController extends Controller
         $doctor_id =Auth::user()->id;
 
         $all_data = ($request->input('data'));
-        $date = $all_data['date'];
+        $date = isset($all_data['date'])?$all_data['date']:"2023-07-5";
 
         if(array_key_exists("addedAppointments",$all_data)) {
 
@@ -125,6 +125,7 @@ class appointmentController extends Controller
             $doctor_id = $all_data['doctorId'];
             $doctor=User::where('id','=',$doctor_id)->first();
             $user=User::where('id','=',$user_id)->first();
+
             Mail::to($doctor->email)->send(new book_appointment($all_data,$doctor,$user));
 
                 return response(compact('state', 'message', 'data'), 200);
@@ -199,7 +200,6 @@ class appointmentController extends Controller
             $slot['appointmentState']=$t_s->appointment_state;
             $slot['appointmentType']=$t_s->appointment_type;
             $slot['appointmentFees']=$t_s->appointmentFees;
-            $slot['appointmentId']=$t_s->id;
             $slot['appointmentId']=$t_s->id;
             $slot['schedule_date']=$t_s->schedule_date;
             $slot['slotTime']=$t_s->slot_time;
@@ -287,6 +287,7 @@ class appointmentController extends Controller
 
             Mail::to($user2->email)->send(new cancel_appointment($all_data,$user1,$user2));
             $data_update->appointment_state="cancelled";
+            $data_update->appointment_state="cancelled";
             $data_update->save();
             $data = [
                 'fromDoctor'=>$doctor_id,
@@ -343,6 +344,8 @@ class appointmentController extends Controller
                     'doctorId' => $user_id,
                     'schedule_date' => $date,
                     'booked_time' => $d->updated_at,
+                    'appointmentDuration'=>$d->duration,
+                    'appointment_duration'=>$d->duration,
 
                     'slot_time' => $d->slot_time,
                     'appointment_state' => $d->appointment_state,
@@ -354,7 +357,7 @@ class appointmentController extends Controller
                     'username'=>  $user_data->username,
                     'doctorName'=>  $user_data->name,
                     'rate' =>$doc_data->rate,
-                    'fees' =>$doc_data->salery,
+                    'fees' =>$d->appointmentFees,
                     'specialty' =>$doc_data->specialty,
                     "test_results"=> null,
                     "current_issue"=> null,
@@ -385,15 +388,17 @@ class appointmentController extends Controller
                 'booked_time' => $d->updated_at,
                 'slot_time' => $d->slot_time,
                 'appointment_state' => $d->appointment_state,
-                'appointmentFees' => $d->appointmentFees,
                 'appointmentId' => $d->id,
                 'appointment_type' => $d->appointment_type,
+                'appointmentDuration'=>$d->duration,
+                'appointment_duration'=>$d->duration,
+
                 'uimgUrl'=> $user_data->img_url,
                 'dimgUrl'=> $doctor_user->img_url,
                 'username'=>  $user_data->username,
                 'doctorName'=>  $doctor_user->name,
                 'rate' =>$doctor_doc->rate,
-                'fees' =>$doctor_doc->salery,
+                'fees' =>$d->appointmentFees,
                 'specialty' =>$doctor_doc->specialty,
                 'is_verified'=>1,
 

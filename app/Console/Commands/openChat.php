@@ -54,7 +54,6 @@ class openChat extends Command
             $currentTime = Carbon::now()->addHours(1);
             $scheduledTime = Carbon::parse($appoint->schedule_date . ' ' . $appoint->slot_time);
             $endTime = Carbon::parse($appoint->schedule_date . ' ' . $appoint->slot_time)->addRealMilliseconds($appoint->duration);
-
             if($currentTime->greaterThanOrEqualTo($scheduledTime) and  $currentTime->lessThanOrEqualTo($endTime)){
                 $openChats = Chat::where([['chat_from', $appoint->schedule_from], ['chat_to', $appoint->booked_from]])
                     ->orWhere([['chat_from', $appoint->booked_from], ['chat_to', $appoint->schedule_from]])->get();
@@ -62,9 +61,7 @@ class openChat extends Command
                 $appoint->save();
                 foreach ($openChats as $openChat) {
                     $openChat->is_open = 1;
-                    $openChat->save();
-                }
-            }
+                    $openChat->save();}}
             elseif ($currentTime->greaterThanOrEqualTo($scheduledTime) and  $currentTime->greaterThanOrEqualTo($endTime)){
                 $openChats = Chat::where([['chat_from', $appoint->schedule_from], ['chat_to', $appoint->booked_from]])
                     ->orWhere([['chat_from', $appoint->booked_from], ['chat_to', $appoint->schedule_from]])->get();
@@ -75,9 +72,6 @@ class openChat extends Command
                     $openChat->save();
                 }
             }
-
-
-
             }
     }
 }

@@ -20,19 +20,15 @@ class deleteAppointments extends Command
 
     public function handle()
     {
-//        $date= \Carbon\Carbon::now()->addHours(1)->format('Y-m-d ');
-//        $time=\Carbon\Carbon::now()->addHours(1)->format('g:i A');
         $appointments=Appointment::where('appointment_state','=','free')->get();
         foreach ($appointments as $appoint){
             if ($appoint){
-
                 $currentTime = Carbon::now()->addHours(1)->addMilliseconds(120000);
-            $scheduledTime = Carbon::parse($appoint->schedule_date . ' ' . $appoint->slot_time);
+                $scheduledTime = Carbon::parse($appoint->schedule_date . ' ' . $appoint->slot_time);
             if($currentTime->greaterThanOrEqualTo($scheduledTime)){
                 $appoint->delete();
             }
         }
         }
-
     }
 }

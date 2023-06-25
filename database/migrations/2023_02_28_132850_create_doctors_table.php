@@ -19,10 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->default(0);
 
             $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->string('username')->unique();
+            $table->string('username')->unique()->default('aaa');
             $table->string('name')->nullable();
-            $table->string('staff_type');
-            $table->string('specialty');
+            $table->string('staff_type')->default('doctor');
+            $table->string('specialty')->default('deoctor');
             $table->string('num_rate')->nullable()->default(0);
             $table->string('age')->nullable();;
             $table->string('rate')->default(0)->nullable();;

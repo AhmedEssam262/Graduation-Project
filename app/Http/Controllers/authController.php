@@ -45,8 +45,6 @@ class authController extends Controller
     }
 
 
-
-
     public function adduser(Request $request)
     {
 
@@ -74,7 +72,7 @@ class authController extends Controller
             $user_type=$u['userType'];
         }
         $bdate=null;
-        if(assert($u['birth'])){
+        if(isset($u['birth'])){
             $bdate=$u['birth'];
         }
         $prefix=null;
@@ -85,14 +83,6 @@ class authController extends Controller
         $phone=null;
         if(isset($u['phone'])){
             $phone=$u['phone'];
-        }
-        $images=array();
-        if(isset($u['images'])){
-            array_push($images, $u['images']);
-        }
-        else{
-            array_push($images, 'none');
-
         }
 
         $address=null;
@@ -113,21 +103,23 @@ class authController extends Controller
         if(isset($address['province'])){
             $province=$address['province'];
         }
+        $ximage=isset($u['images'])?$u['images'][0]:null;
         $state="good, ok";
         $user = User::create([
             'name' => $u['nickname'],
             'email' => $email,
             'username' => $u['username'],
-            'password' => bcrypt($u['password']),
-            'user_type' => $user_type,
-            'bdate' =>$bdate,
+            'password' => isset($u['password'])?bcrypt($u['password']):"Aa111111",
+            'user_type' => isset($u['userType'])?$u['userType']:"patient",
+            'bdate' =>$bdate?$bdate:null,
             'gender' => $u['gender'],
             'prefix' =>$prefix,
             'city' =>$city,
             'street' =>$street,
             'province' =>$province,
             'phone' =>$phone,
-            'img_url' =>$images[0],
+            'img_url' =>$ximage?$ximage:null,
+            'profile_photo_path' =>$ximage?$ximage:null,
         ]);
 
         $data = User::where('username',$x)->first();
@@ -171,7 +163,7 @@ class authController extends Controller
                 'user_id'=>$user_id,
                 'username' => $data['username'],
                 'staff_type' => $u['userType'],
-                'specialty' => $u['specialty'],
+                'specialty' => isset($u['specialty'])?$u['specialty']:"none",
                 'age' => Carbon::parse($u ['birth'])->age,
                 /*                'num_rate' => $u['num_rate'],*/
                 /*                'rate' => $u['rate'],*/

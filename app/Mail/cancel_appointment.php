@@ -24,6 +24,8 @@ class cancel_appointment extends Mailable
     }
     public function build()
     {
-        return $this->subject('Cancelling an appointment')->view('emails.cancel')->with([['all_data'=>$this->all_data],['user1'=>$this->user1],['user2'=>$this->user2]]);
+        return $this->subject('Cancelling an appointment')
+            ->view('emails.cancel')
+            ->with([['all_data'=>$this->all_data],['user1'=>$this->user1],['user2'=>$this->user2]]);
     }
 }

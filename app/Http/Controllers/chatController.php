@@ -23,8 +23,8 @@ class chatController extends Controller
         }
         $user1_id =Auth::user()->id;
         $all_data = ($request->input('data'));
-        $content=$all_data['content'];
-        $user2_id=$all_data['message_to'];
+        $content=isset($all_data['content'])?$all_data['content']:null;
+        $user2_id=isset($all_data['message_to']) ? $all_data['message_to']:2;
         $first=false;
         if(isset($all_data['isFirst'])){
             $first=$all_data['isFirst'];

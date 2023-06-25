@@ -19,7 +19,7 @@ class likesController extends Controller
         }
         $user_id =Auth::user()->id;
         $all_data = ($request->input('data'));
-        $likeType = $all_data['likeType'];
+        $likeType = isset($all_data['likeType'])?$all_data['likeType']:"like";
         $postId = $all_data['postId'];
         $isPost=null;
         if(isset($all_data['isPost'])){

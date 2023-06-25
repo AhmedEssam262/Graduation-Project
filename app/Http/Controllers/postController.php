@@ -17,11 +17,8 @@ class postController extends Controller
         $user_id = Auth::user()->id;
         $all_data = ($request->input('data'));
         $content = $all_data['content'];
-        $img = $all_data['postImg'];
-        $img = null;
-        if (isset($all_data['postImg'])) {
-            $img = $all_data['postImg'];
-        }
+        $img = isset($all_data['postImg']) ? $all_data['postImg'] : null;
+
         $post = Post::create([
             'user_id' => $user_id,
             'content' => $content,
@@ -78,22 +75,24 @@ class postController extends Controller
     public function get_posts(){
         $data = array();
         $all_posts=Post::all();
-        foreach ($all_posts as $post){
-            $user=\App\Models\User::where([['id', '=', $post->user_id]])->first();
-            $res=[
-                'post_id'=> $post->id,
-                'user_id'=> $post->user_id,
-                'content'=> $post->content,
-                'issued_time'=> $post->created_at,
-                'num_comments'=> $post->num_comments,
-                'like_emoji'=> $post->like_emoji,
-                'dislike'=> $post->dislike,
-                'angry'=> $post->angry,
-                'post_img'=> $post->post_img,
-                'nick_name'=> $user->name,
-                'img_url'=> $user->img_url,
-            ];
-            array_push($data, $res);
+        if($all_posts) {
+            foreach ($all_posts as $post) {
+                $user = \App\Models\User::where([['id', '=', $post->user_id]])->first();
+                $res = [
+                    'post_id' => $post->id,
+                    'user_id' => $post->user_id,
+                    'content' => $post->content,
+                    'issued_time' => $post->created_at,
+                    'num_comments' => $post->num_comments,
+                    'like_emoji' => $post->like_emoji,
+                    'dislike' => $post->dislike,
+                    'angry' => $post->angry,
+                    'post_img' => $post->post_img,
+                    'nick_name' => $user->name,
+                    'img_url' => $user->img_url,
+                ];
+                array_push($data, $res);
+            }
         }
         $state="good, ok";
         $message="your data added successfully";
@@ -102,7 +101,6 @@ class postController extends Controller
 
     public function get_comments()
     {
-        $post_id=1;
         if(isset($_GET['postId'])) {
             $post_id=($_GET['postId']);
             $all_comments=Comment::where([['post_id', '=', $post_id]])->get();

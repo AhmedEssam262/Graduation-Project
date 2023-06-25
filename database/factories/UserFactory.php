@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Team;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
@@ -25,15 +26,25 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'two_factor_secret' => null,
-            'two_factor_recovery_codes' => null,
+            'nickname' => null,
+            'username' => $this->faker->userName,
+            'email' => $this->faker->unique()->safeEmail,
+            'userType' => 'doctor',
+            'birth' => $this->faker->date(),
+            'gender' => $this->faker->randomElement(['Male', 'Female']),
+            'prefix' => $this->faker->randomElement(['+20.', '+94.']),
+            'phone' => $this->faker->phoneNumber,
+            'img_url' => null,
+            'province' => $this->faker->state,
+            'city' => $this->faker->city,
+            'street' => $this->faker->streetAddress,
+            'email_verified_at' => null,
+            'password' => bcrypt("Aa111111"), // Default password for testing purposes
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
-            'current_team_id' => null,
+            'moreInf' => false,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ];
     }
 
