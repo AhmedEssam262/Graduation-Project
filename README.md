@@ -1,3 +1,15 @@
+# How to run the backend server
+
+#### 1.download the project from github
+#### 2.run the following commands in termnal to install packages
+####   2.1. composer install
+####   2.2. cp .env.example .env
+####   2.3. php artisan key:generate
+####   2.4. php artisan migrate
+#### 3.for funning servers
+####   3.1 php artisan serve
+####   3.2 php artisan schedule:work
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
