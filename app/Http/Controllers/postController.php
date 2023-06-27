@@ -101,7 +101,7 @@ class postController extends Controller
                     'like_emoji' => $like_emoji,
                     'dislike' => $dislike,
                     'angry' => $angry,
-                    'post_img' => asset('storage/' . $post->post_img),
+                    'post_img' => $post->post_img?asset('storage/' . $post->post_img):null,
                     'nick_name' => $user->name,
                     'img_url' => asset('storage/' . $user->img_url),
                     'num_comments'=>$no_comments
