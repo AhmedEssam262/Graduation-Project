@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\adminController;
 use App\Http\Controllers\appointmentController;
+use App\Http\Controllers\appointmentextraController;
 use App\Http\Controllers\authController;
 use App\Http\Controllers\chatController;
 use App\Http\Controllers\doctorController;
@@ -49,6 +50,7 @@ Route::post('cancel/appointment',[appointmentController::class,'cancel_appointme
 Route::get('get/appointments',[appointmentController::class,'get_appointments']);
 Route::post('get/slots',[appointmentController::class,'get_slots']);
 Route::post('edit/appointment',[appointmentController::class,'edit_appointments']);
+Route::post('done/appointments',[appointmentextraController::class,'update_appointments']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
 Route::post('submit/message',[chatController::class,'add_msg']);
