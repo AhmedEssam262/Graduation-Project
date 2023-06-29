@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\Doctor;
+use App\Models\Feedback;
 use App\Models\Message;
 use App\Models\User;
 use Carbon\Carbon;
@@ -22,99 +23,51 @@ class chatController extends Controller
             return response(compact('state', 'message','data'),401);
         }
         $user1_id =Auth::user()->id;
+        $sender=Auth::user();
+
         $all_data = ($request->input('data'));
         $content=isset($all_data['content'])?$all_data['content']:null;
         $user2_id=isset($all_data['message_to']) ? $all_data['message_to']:2;
-        $first=false;
-        $is_open=Chat::where([['chat_from','=',$user1_id],['chat_to','=',$user2_id],['is_open','=',1]])
-            ->orwhere([['chat_from','=',$user2_id],['chat_to','=',$user1_id],['is_open','=',1]])->get();
-        if(isset($all_data['isFirst'])){
-            $first=$all_data['isFirst'];
+        $old_chat=Chat::where([['chat_from','=',$user1_id],['chat_to','=',$user2_id]])
+            ->orwhere([['chat_from','=',$user2_id],['chat_to','=',$user1_id]])->get();;
+
+        if(count($old_chat)==0 and $user1_id!=$user2_id ){
+            $chat1=  Chat::create([
+                'chat_from'=>$user1_id,
+                'chat_to'=>$user2_id,
+            ]);
+            $user1_admin=User::where('id','=',$user1_id)->first();
+            if($user1_admin->user_type=="Admin"){
+                $chat1->is_open=1;
+                $chat1->update();
+            }
+            $chat2=  Chat::create([
+                'chat_from'=>$user2_id,
+                'chat_to'=>$user1_id,
+            ]);
+            $user2_admin=User::where('id','=',$user2_id)->first();
+            if($user2_admin->user_type=="Admin"){
+                $chat2->is_open=1;
+                $chat2->update();
+            }
+
+        }
+        $sender_chat=Chat::where('chat_from','=',$user1_id)->first();
+        if($sender->user_type=="user" &&$sender_chat->is_open==0){
+            $state = "not authorized to access";
+            $message = "cannot access to api resources";
+            $data = [
+                'isUser' => 0
+            ];
+            return response(compact('state', 'message', 'data'), 401);
         }
 
-        if($first==true){
-            $chat=  Chat::create([
-                'chat_from'=>$user1_id,
-                'chat_to'=>$user2_id,
-            ]);
-            $chat=  Chat::create([
-                'chat_from'=>$user2_id,
-                'chat_to'=>$user1_id,
-            ]);
-            if(empty($is_open)) {
-                if (!Auth::user()) {
-                    $state = "not authorized to access";
-                    $message = "cannot access to api resources";
-                    $data = [
-                        'isUser' => 0
-                    ];
-                    return response(compact('state', 'message', 'data'), 401);
-                }
-            }
-            $msg=Message::create([
-                'message_from'=>$user1_id,
-                'message_to'=>$user2_id,
-                'content'=>$content,
-                'issued_date'=>Carbon::now(),
-                'issued_time'=>Carbon::now(),
-            ]);
-            $state="good, ok";
-            $message="your data added successfully";
-            $data = [
-                'message_id' => $msg->id
-            ];
-            return response(compact('state', 'message', 'data'), 200);
-        }
-        $all_chat=Chat::where([['chat_from', '=', $user1_id],['chat_to', '=', $user2_id]])->first();
-        if(empty($all_chat)) {
-            $chat=  Chat::create([
-                'chat_from'=>$user1_id,
-                'chat_to'=>$user2_id,
-            ]);
-            $chat=  Chat::create([
-                'chat_from'=>$user2_id,
-                'chat_to'=>$user1_id,
-            ]);
-            if(empty($is_open)) {
-                if (!Auth::user()) {
-                    $state = "not authorized to access";
-                    $message = "cannot access to api resources";
-                    $data = [
-                        'isUser' => 0
-                    ];
-                    return response(compact('state', 'message', 'data'), 401);
-                }
-            }
-            $msg=Message::create([
-                'message_from'=>$user1_id,
-                'message_to'=>$user2_id,
-                'content'=>$content,
-                'issued_date'=>Carbon::now(),
-                'issued_time'=>Carbon::now(),
-            ]);
-            $state="good, ok";
-            $message="your data added successfully";
-            $data = [
-                'message_id' => $msg->id
-            ];
-            return response(compact('state', 'message', 'data'), 200);
-        }
-        if(empty($is_open)) {
-            if (!Auth::user()) {
-                $state = "not authorized to access";
-                $message = "cannot access to api resources";
-                $data = [
-                    'isUser' => 0
-                ];
-                return response(compact('state', 'message', 'data'), 401);
-            }
-        }
             $msg=Message::create([
             'message_from'=>$user1_id,
             'message_to'=>$user2_id,
             'content'=>$content,
-            'issued_date'=>Carbon::now(),
-            'issued_time'=>Carbon::now(),
+            'issued_date'=>Carbon::now()->addHours(1),
+            'issued_time'=>Carbon::now()->addHours(1),
         ]);
         $state="good, ok";
         $message="your data added successfully";
@@ -135,8 +88,33 @@ class chatController extends Controller
             return response(compact('state', 'message','data'),401);
         }
         $user1_id =Auth::user()->id;
-        if(isset($_GET['message_to'])) {
-            $user2_id = $_GET['message_to'];
+        if(isset($_GET['message_to'])){
+            $user2_id =$_GET['message_to'];
+            $old_chat=Chat::where([['chat_from','=',$user1_id],['chat_to','=',$user2_id]])
+                ->orwhere([['chat_from','=',$user2_id],['chat_to','=',$user1_id]])->get();
+
+            if(count($old_chat)==0 and $user1_id!=$user2_id) {
+                $chat1 = Chat::create([
+                    'chat_from' => $user1_id,
+                    'chat_to' => $user2_id,
+                ]);
+
+                $user1_admin = User::where('id', '=', $user1_id)->first();
+                if ($user1_admin->user_type == "Admin") {
+                    $chat1->is_open = 1;
+                    $chat1->update();
+                }
+
+                $chat2 = Chat::create([
+                    'chat_from' => $user2_id,
+                    'chat_to' => $user1_id,
+                ]);
+                $user2_admin = User::where('id', '=', $user2_id)->first();
+                if ($user2_admin->user_type == "Admin") {
+                    $chat2->is_open = 1;
+                    $chat2->update();
+                }
+            }
         }
 
         $all_msg=Message::where([['message_from', '=', $user1_id],['message_to', '=', $user2_id]])
@@ -179,9 +157,35 @@ class chatController extends Controller
             ];
             return response(compact('state', 'message','data'),401);
         }
+
         $user1_id =Auth::user()->id;
         $all_chat=Chat::where([['chat_from', '=', $user1_id]])->get();
         $data = array();
+        if(isset($_GET['chat_to'])){
+            $chat_to =$_GET['chat_to'];
+            $old_chat=Chat::where([['chat_from','=',$user1_id],['chat_to','=',$chat_to]])
+                ->orwhere([['chat_from','=',$chat_to],['chat_to','=',$user1_id]])->get();;
+             if(count($old_chat)==0 and $user1_id!=$chat_to) {
+                 $chat1 = Chat::create([
+                     'chat_from' => $user1_id,
+                     'chat_to' => $chat_to,
+                 ]);
+                 $user1_admin = User::where('id', '=', $user1_id)->first();
+                 if ($user1_admin->user_type == "Admin") {
+                     $chat1->is_open = 1;
+                     $chat1->update();
+                 }
+                 $chat2 = Chat::create([
+                     'chat_from' => $chat_to,
+                     'chat_to' => $user1_id,
+                 ]);
+                 $user2_admin = User::where('id', '=', $chat_to)->first();
+                 if ($user2_admin->user_type == "Admin") {
+                     $chat2->is_open = 1;
+                     $chat2->update();
+                 }
+             }
+        }
         foreach ($all_chat as $chat){
             $user2=User::where([['id', '=', $chat->chat_to]])->first();
             $spec=null;
@@ -189,7 +193,7 @@ class chatController extends Controller
             if($user2->user_type=="doctor"){
                 $user2doctor=Doctor::where([['user_id', '=', $chat->chat_to]])->first();
                 $spec=$user2doctor->specialty;
-                $rate=$user2doctor->rate;
+                $rate=Feedback::where('feedback_to','=',$chat->chat_to)->avg('rate');
             }
             $res=[
                 'chat_from'=> $user1_id,
@@ -201,7 +205,7 @@ class chatController extends Controller
                 'user_type'=>$user2->user_type,
                 'specialty'=>$spec,
                 'is_open'=>$chat->is_open,
-                'rate'=>$rate
+                'rate'=>$rate?$rate:0
             ];
             array_push($data, $res);
         }

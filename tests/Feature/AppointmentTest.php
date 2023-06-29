@@ -25,7 +25,6 @@ class AppointmentTest extends TestCase
     public function it_adds_new_appointments_successfully_when_user_is_authenticated()
     {
         // Create a user and simulate authentication
-
         $user1 = User::create([
             "id"=>1,
             "username"=>"ahmed262",
@@ -38,7 +37,6 @@ class AppointmentTest extends TestCase
             "password"=>"Aa111111",
             "user_type"=>"doctor"
         ]);
-
         $appointment = Appointment::create([
             'schedule_from' => 1,
             'schedule_date'=>"2024-02-26",
@@ -48,7 +46,6 @@ class AppointmentTest extends TestCase
             'appointment_state' => 'free',
         ]);
         $this->actingAs($user1);
-
         // Create a fake appointment data
         $AppointmentData = [
             'schedule_from' => 1,

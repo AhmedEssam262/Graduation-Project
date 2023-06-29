@@ -701,6 +701,8 @@ class ComposerStaticInit56c1cdaf309305cb9639e2911366a60f
         'App\\Models\\Message' => __DIR__ . '/../..' . '/app/Models/Message.php',
         'App\\Models\\Post' => __DIR__ . '/../..' . '/app/Models/Post.php',
         'App\\Models\\Reply' => __DIR__ . '/../..' . '/app/Models/Reply.php',
+        'App\\Models\\Report' => __DIR__ . '/../..' . '/app/Models/Report.php',
+        'App\\Models\\Report_detail' => __DIR__ . '/../..' . '/app/Models/Report_detail.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',

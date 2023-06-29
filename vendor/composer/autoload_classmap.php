@@ -56,6 +56,8 @@ return array(
     'App\\Models\\Message' => $baseDir . '/app/Models/Message.php',
     'App\\Models\\Post' => $baseDir . '/app/Models/Post.php',
     'App\\Models\\Reply' => $baseDir . '/app/Models/Reply.php',
+    'App\\Models\\Report' => $baseDir . '/app/Models/Report.php',
+    'App\\Models\\Report_detail' => $baseDir . '/app/Models/Report_detail.php',
     'App\\Models\\User' => $baseDir . '/app/Models/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',

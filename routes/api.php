@@ -12,6 +12,7 @@ use App\Http\Controllers\likesController;
 use App\Http\Controllers\moreController;
 use App\Http\Controllers\paymentController;
 use App\Http\Controllers\postController;
+use App\Http\Controllers\reportsController;
 use App\Http\Controllers\userController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -50,7 +51,7 @@ Route::post('cancel/appointment',[appointmentController::class,'cancel_appointme
 Route::get('get/appointments',[appointmentController::class,'get_appointments']);
 Route::post('get/slots',[appointmentController::class,'get_slots']);
 Route::post('edit/appointment',[appointmentController::class,'edit_appointments']);
-Route::post('done/appointments',[appointmentextraController::class,'update_appointments']);
+Route::post('update/appointment',[appointmentextraController::class,'update_appointments']);
 
 /*Route::post('/logout', [AuthController::class, 'logout']);*/
 Route::post('submit/message',[chatController::class,'add_msg']);
@@ -63,7 +64,7 @@ Route::get('get/posts',[postController::class,'get_posts']);
 Route::get('get/comments',[postController::class,'get_comments']);
 Route::post('submit/comment',[postController::class,'comment']);
 
-Route::post('/payment/stripe',[paymentController::class,'pay']);
+Route::post('/create/payment',[paymentController::class,'pay']);
 Route::post('/change/doctor',[adminController::class,'verification']);
 Route::post('/change/user',[adminController::class,'change_user']);
 
@@ -76,3 +77,7 @@ Route::get('/get/like',[likesController::class,'get_like']);
 //clinic details
 Route::post('submit/clinic',[moreController::class,'submit_clinic']);
 
+// reports
+Route::post('submit/report',[reportsController::class,'submit_report']);
+Route::get('get/reports',[reportsController::class,'get_reports']);
+Route::get('get/details/report',[reportsController::class,'get_details_report']);

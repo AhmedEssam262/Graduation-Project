@@ -128,7 +128,9 @@ class feedbackController extends Controller
         $rate=$all_data['rate'];
         $feedback=$all_data['feedback'];
         $feedback_to=$all_data['feedback_to'];
-        $all_feed=Feedback::where([['feedback_from', '=', $user_id]],['feedback_to', '=', $feedback_to])->first();
+        $all_feed=Feedback::where([['feedback_from', '=', $user_id],['feedback_to', '=', $feedback_to]])->first();
+/*        return response(compact('all_feed'), 200);*/
+
         if(empty($all_feed)) {
             $feed=Feedback::create([
                 'feedback_from'=>$user_id,
@@ -147,7 +149,6 @@ class feedbackController extends Controller
                 'feedback'=>$feedback,
             ]);
             $first=false;
-
         }
 
 

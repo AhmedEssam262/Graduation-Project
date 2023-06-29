@@ -19,27 +19,37 @@ class moreController extends Controller
             return response(compact('state', 'message','data'),401);
         }
         $user_id =Auth::user()->id;
+        $clinic_before=Clinic_detail::where('doctor_id','=',$user_id)->first();
         $all_data = ($request->input('data'));
         $phone=$all_data['phone'];
-        $telephone=$all_data['telephone'];
+        $telephone=isset($all_data['telephone'])?$all_data['telephone']:"none";
         $prefix=$all_data['prefix'];
-        $isEdit=true;
-        if(isset($all_data['isEdit'])){
-            $isEdit=$all_data['isEdit'];
-        }
-
-        $name=false;
-        if(isset($all_data['clinic_name'])){
-            $name=$all_data['clinic_name'];
-        }
+        $isEdit=isset($all_data['isEdit'])?$all_data['isEdit']:false;
+        $name=isset($all_data['clinic_name'])?$all_data['clinic_name']:false;
         $address=$all_data['address'];
         $city=$address['city'];
         $street=$address['street'];
-        if(!$isEdit){
-            $state = "bad request";
-            $message = "inf. not found";
+        if(!empty($clinic_before)) {
+            if ($isEdit == false) {
+                $state = "bad request";
+                $message = "inf. not found";
+                $data = [
+                    'is_exist' => true,
+                ];
+                return response(compact('state', 'message', 'data'), 200);
+            }
+            else{
+                $clinic_before->city=$city;
+                $clinic_before->street=$street;
+                $clinic_before->prefix=$prefix;
+                $clinic_before->pnumber=$phone;
+                $clinic_before->tnumber=$telephone;
+                $clinic_before->update();
+            }
+            $state = "good, ok";
+            $message = "your data added successfully";
             $data = [
-                'is_exist' => true,
+                'isFirst' => false,
             ];
             return response(compact('state', 'message', 'data'), 200);
         }
@@ -57,7 +67,7 @@ class moreController extends Controller
         $state = "good, ok";
         $message = "your data added successfully";
         $data = [
-            'isFirst' => false,
+            'isFirst' => true,
         ];
         return response(compact('state', 'message', 'data'), 200);
     }

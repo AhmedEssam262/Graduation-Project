@@ -28,7 +28,7 @@ class likesController extends Controller
             $like_emoji = Like::where([['post_id', '=', $postId], ['like_type', '=', "like"], ['is_post', '=', 1]])->count();
             $dislike = Like::where([['post_id', '=', $postId], ['like_type', '=', "dislike"], ['is_post', '=', 1]])->count();
             $angry = Like::where([['post_id', '=', $postId], ['like_type', '=', "angry"], ['is_post', '=', 1]])->count();
-            $before_like = Like::where([['post_id', '=', $postId], ['is_post', '=', 1]])->first();
+            $before_like = Like::where([['post_id', '=', $postId], ['is_post', '=', 1],['user_id','=',$user_id]])->first();
 
             if (!empty($before_like)) {
                 if ($before_like->like_type == $likeType) {
@@ -38,12 +38,12 @@ class likesController extends Controller
                     $angry = ($likeType == "angry") ? $angry - 1 : $angry;
                     //return response(compact('before_like'), 200);
                     $data = [
-                        'like_id' => $before_like->id,
+                        'like_id' => null,
                         'post_id' => $postId,
                         'comment_id' => null,
                         'user_id' => $user_id,
                         'is_post' => $isPost,
-                        'like_type' => $likeType,
+                        'like_type' => null,
                         'like_emoji' => $like_emoji,
                         'dislike' => $dislike,
                         'angry' => $angry,
@@ -116,7 +116,7 @@ class likesController extends Controller
             $like_emoji = Like::where([['comment_id', '=', $commentId], ['like_type', '=', "like"], ['is_post', '=', 0]])->count();
             $dislike = Like::where([['comment_id', '=', $commentId], ['like_type', '=', "dislike"], ['is_post', '=', 0]])->count();
             $angry = Like::where([['comment_id', '=', $commentId], ['like_type', '=', "angry"], ['is_post', '=', 0]])->count();
-            $before_like = Like::where([['comment_id', '=', $commentId], ['is_post', '=', 0]])->first();
+            $before_like = Like::where([['comment_id', '=', $commentId], ['is_post', '=', 0],['user_id','=',$user_id]])->first();
 
             if (!empty($before_like)) {
                 if ($before_like->like_type == $likeType) {
@@ -126,12 +126,12 @@ class likesController extends Controller
                     $angry = ($likeType == "angry") ? $angry - 1 : $angry;
                     //return response(compact('before_like'), 200);
                     $data = [
-                        'like_id' => $before_like->id,
+                        'like_id' => null,
                         'post_id' => $postId,
                         'comment_id' => $commentId,
                         'user_id' => $user_id,
                         'is_post' => $isPost,
-                        'like_type' => $likeType,
+                        'like_type' => null,
                         'like_emoji' => $like_emoji,
                         'dislike' => $dislike,
                         'angry' => $angry,
@@ -210,7 +210,7 @@ class likesController extends Controller
 
         if(isset($_GET['commentId'])) {
             $comment_id = $_GET['commentId'];
-            $like = Like::where([['post_id', $post_id],['comment_id',$comment_id]])->first();
+            $like = Like::where([['post_id', $post_id],['comment_id',$comment_id],['user_id','=',$user_id]])->first();
             $state = "good, ok";
             $message = "information retreived successfully";
             if(!empty($like)){
@@ -229,7 +229,7 @@ class likesController extends Controller
             return response(compact('state', 'message', 'data'), 200);
         }
         //only post
-        $like = Like::where('post_id', $post_id)->first();
+        $like = Like::where([['post_id', $post_id],['user_id','=',$user_id]])->first();
         $state = "good, ok";
         $message = "information retreived successfully";
         if(!empty($like)){
