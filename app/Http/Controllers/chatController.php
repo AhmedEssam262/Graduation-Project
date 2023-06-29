@@ -72,7 +72,10 @@ class chatController extends Controller
         $state="good, ok";
         $message="your data added successfully";
         $data = [
-            'message_id' => $msg->id
+            'message_id' => $msg->id,
+            'issued_date'=>Carbon::now()->addHours(1),
+            'issued_time'=>Carbon::now()->addHours(1),
+        ];
         ];
         return response(compact('state', 'message', 'data'), 200);
     }
