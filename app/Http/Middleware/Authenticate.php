@@ -20,7 +20,7 @@ class Authenticate extends Middleware
 
 
 
-    protected function authenticate($request, array $guards)
+/*    protected function authenticate($request, array $guards)
     {
         if (empty($guards)) {
             $guards = [null];
@@ -47,6 +47,6 @@ class Authenticate extends Middleware
             ];
             return response(compact('state', 'message','data'),401);
         }
-    }
+    }*/
 }
 

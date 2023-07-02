@@ -12,5 +12,6 @@ class Chat extends Model
         'chat_from',
         'chat_to',
         'is_open',
+        'admin_restrict',
     ];
 }

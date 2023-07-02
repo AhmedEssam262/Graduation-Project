@@ -45,6 +45,7 @@ class userController extends Controller
                             'email' => $user->email,
                             'province' => $user->province,
                             'city' => $user->city,
+
                             'street' => $user->street,
                             'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
@@ -79,6 +80,7 @@ class userController extends Controller
                 ];
                 return response()->json($userData);
             } else {
+                $patient_record=History::where('user_id','=',$user->id)->first();
                 $userData = [
                     'state' => 'good, ok',
                     'message' => 'information retreived successfully',
@@ -94,6 +96,8 @@ class userController extends Controller
                             'email' => $user->email,
                             'province' => $user->province,
                             'city' => $user->city,
+                            "test_results"=> "asclks",
+                            "immunizations"=> "immunizations",
                             'street' => $user->street,
                             'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
@@ -101,7 +105,16 @@ class userController extends Controller
                                     'img_url' => asset('storage/' . $user->img_url),
                                 ]
                             ]
-                        ]
+                        ],
+                        'patientRecords'=>[
+                        "test_results"=> isset($patient_record->test_results)?$patient_record->test_results:null,
+                        "illnesses_history"=> isset($patient_record->illnesses_history)?$patient_record->illnesses_history:null,
+                        "current_issue"=> isset($patient_record->current_issue)?$patient_record->current_issue:null,
+                        "allergies"=> isset($patient_record->allergies)?$patient_record->allergies:null,
+                        "surgeries"=> isset($patient_record->surgeries)?$patient_record->surgeries:null,
+                        "immunizations"=> isset($patient_record->immunizations)?$patient_record->immunizations:null,
+
+                ],
                     ]
                 ];
                 return response()->json($userData);
@@ -174,6 +187,7 @@ class userController extends Controller
                 ];
                 return response()->json($userData);
             } else {
+                $patient_record=History::where('user_id','=',$user->id)->first();
                 $userData = [
                     'state' => 'good, ok',
                     'message' => 'information retreived successfully',
@@ -192,13 +206,24 @@ class userController extends Controller
                             'street' => $user->street,
                             'is_verified'=>1,
 
+
                             'age' => Carbon::parse($user->bdate)->age,
                             'img_urls' => [
                                 [
                                     'img_url' => asset('storage/' . $user->img_url),
                                 ]
                             ]
-                        ]
+                        ],
+                        'patientRecords'=>[
+
+                                "test_results"=> isset($patient_record->test_results)?$patient_record->test_results:null,
+                                "illnesses_history"=> isset($patient_record->illnesses_history)?$patient_record->illnesses_history:null,
+                                "current_issue"=> isset($patient_record->current_issue)?$patient_record->current_issue:null,
+                                "allergies"=> isset($patient_record->allergies)?$patient_record->allergies:null,
+                                "surgeries"=> isset($patient_record->surgeries)?$patient_record->surgeries:null,
+                                "immunizations"=> isset($patient_record->immunizations)?$patient_record->immunizations:null,
+
+                        ],
                     ]
                 ];
                 return response()->json($userData);
@@ -313,17 +338,27 @@ class userController extends Controller
             $illnessesHistory=$val['illnessesHistory'];
         }
         $user_id=Auth::user()->id;
-
-        $medical=History::create([
-            'user_id'=>$user_id,
-            'illnesses_history'=>$illnessesHistory,
-            'test_results'=>$testResults,
-            'current_issue'=>$currentIssue,
-            'allergies'=>$allergies,
-            'immunizations'=>$immunizations,
-            'surgeries'=>$surgeries
-        ]);
-
+        $old_history=History::where('user_id','=',$user_id)->first();
+        if(!empty($old_history)){
+            $old_history->illnesses_history=$illnessesHistory;
+            $old_history->test_results=$testResults;
+            $old_history->current_issue=$currentIssue;
+            $old_history->allergies=$allergies;
+            $old_history->immunizations=$immunizations;
+            $old_history->surgeries=$surgeries;
+            $old_history->save();
+        }
+        else {
+            $medical = History::create([
+                'user_id' => $user_id,
+                'illnesses_history' => $illnessesHistory,
+                'test_results' => $testResults,
+                'current_issue' => $currentIssue,
+                'allergies' => $allergies,
+                'immunizations' => $immunizations,
+                'surgeries' => $surgeries
+            ]);
+        }
         $state="good, ok";
         $message="your data added successfully";
         $data = [
